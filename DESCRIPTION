@@ -1,11 +1,25 @@
 Package: BYUImachine
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: Machine Learning Model Selection of Cognostic Data
+Description: Produce a robust prediction model using machine learning to predict attrition of eClaims customers.
+    Also contains comprehensive evaluation framework around those models.
+Version: 0.0.0.9000
+Author: c(person("Dallin","Webb",       email = "dallinwebb@byui.edu", role = c("aut","cre")),
+          person("Chad","Schaeffer",    email = "sch12059@byui.edu",   role = "aut"),
+          person("Nic","Stover",        email = "sto15064@byui.edu",   role = "aut"),
+          person("Spencer","Cook",      email = "coo12038@byui.edu",   role = "aut"),
+          person("Brad","Borget",       email = "bor13001@byui.edu",   role = "aut"),
+          person("Trenton","Pulsipher", email = "trenton.pulsipher@henryschein.com", role = "cph"))
+Maintainer: Dallin Webb <dallinwebb@byui.edu>
+License: file LICENCE
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 6.1.0
+Imports: dplyr,
+    caret,
+    DMwR,
+    naniar
+Depends: R (>= 3.0.1)
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
