@@ -14,7 +14,5 @@ Description goes here
 \code{preprocess_data}
 
 \code{other_function}
-
-\eqn{\alpha}
 }
 
