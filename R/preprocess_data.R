@@ -14,10 +14,13 @@
 #' @param k the number of nearest neighbours to use for imputate (defaults to 10)
 #' @param binary_y TRUE = Recodes pred to 0 and 1; FALSE = Recodes pred to factor
 #' @param pca TRUE = PCA is computed instead of corr
-#' @param
+#' @import DMwR
+#' @import caret
+#' @import naniar
+#' @import purrrlyr
+#' @import seplyr
+#' @import tidyverse
 #' @export
-#' @examples
-#' insert examples here
 #'
 #' @return This function returns a \code{tibble} of optimized features
 #'
@@ -55,7 +58,7 @@ if (sum(class(x) == "grouped_df") > 0) {
 }
 
 # Step 4:  Remove ID column if present -----------------------------------------
-if (sum(names(cogs) %>% str_detect("ID")) > 0) {
+if (sum(names(x) %>% str_detect("ID")) > 0) {
   x <- x %>% select(-ID)
   message("ID column has been removed")
 }
