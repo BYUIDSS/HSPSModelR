@@ -33,9 +33,11 @@ Focuses on reducing columns, but not transforming values. Values should be trans
 
 ## Modeling
 
-Training with the caret package to select optimal models to ultimatly suggest to stake holder as well as providing an ensamble model for use in predicting attrition of new data.
+Training with the caret package to select optimal models to ultimatly suggest to stake holder as well as providing an ensemble model for use in predicting attrition of new data.
 
-Function to produce diagnostic table containing 
+Function to produce a table displaying diagnostics for each model, where each row represents a model (labeled by the 
+caret method used to create the model) and each column is some measure of performance (as included in the caret
+confusionMatrix function)
 
 * Accuracy
 * ...
