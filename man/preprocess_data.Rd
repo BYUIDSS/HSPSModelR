@@ -4,9 +4,8 @@
 \alias{preprocess_data}
 \title{Pre-process cognostic data}
 \usage{
-preprocess_data(x, pred = "Truth", corr_cutoff = 0.9,
-  freq_cut = 95/5, unique_cut = 10, impute = "zero", k = 10,
-  binary_y = FALSE, pca = FALSE)
+preprocess_data(x, pred = "Truth", freq_cut = 95/5, unique_cut = 10,
+  impute = "zero", k = 10, binary_y = FALSE)
 }
 \arguments{
 \item{x}{data frame or tibble.}
@@ -16,10 +15,6 @@ preprocess_data(x, pred = "Truth", corr_cutoff = 0.9,
 \item{k}{the number of nearest neighbours to use for imputate (defaults to 10)}
 
 \item{binary_y}{TRUE = Recodes pred to 0 and 1; FALSE = Recodes pred to factor}
-
-\item{pca}{TRUE = PCA is computed instead of corr}
-
-\item{corr.cutoff}{A numeric value for the pair-wise absolute correlation cutoff (defaults to .90)}
 
 \item{freqCut}{the cutoff for the ratio of the most common value to the second most common value}
 
@@ -36,10 +31,6 @@ Generates a tibble with features optimized for machine learning
 }
 \details{
 This is the details section
-}
-\examples{
-insert examples here
-
 }
 \seealso{
 \link[base]{summary}
