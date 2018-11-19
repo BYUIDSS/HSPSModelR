@@ -48,6 +48,8 @@ confusionMatrix function)
 
 Function that puts the model to use.
 
+* better to not detect dropping clients than to label healthy clients as dropping.
+
 > Do you want the model ready to go in package? Or a list of suggested models to pick from.
 
 <br>
