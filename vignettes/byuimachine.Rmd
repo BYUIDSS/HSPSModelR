@@ -44,6 +44,12 @@ confusionMatrix function)
 
 <br>
 
+## Tables
+
+* Each model run diagnostics
+* Predictions for each ID to search for general model consensus
+
+
 ## Predicting
 
 Function that puts the model to use.

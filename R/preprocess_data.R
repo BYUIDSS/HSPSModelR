@@ -5,13 +5,15 @@
 #' This is the details section
 #'
 #' @param x data frame or tibble.
-#' @param pred classifier column
+#' @param target classifier column
+#' @param reduce_cols TRUE = Columns are reduced based on near zero variance and correlation; FALSE = Nothing
+#' @param factor_y FALSE = Recodes pred to 0 and 1; TRUE = Recodes pred to factor
+#' @param impute Impute NA by "knn","mean","zero"
+#' @param corr_cutoff Corelation coefficient level to cut off highly correlated columns, devaulted to .90
 #' @param freqCut the cutoff for the ratio of the most common value to the second most common value
 #' @param uniqueCut the cutoff for the percentage of distinct values out of the number of total samples
-#' @param impute.method Impute NA by "knn","mean","zero", or "pca"
 #' (knn takes substantially longer to compute, zero replaces NA with 0)
 #' @param k the number of nearest neighbours to use for imputate (defaults to 10)
-#' @param binary_y TRUE = Recodes pred to 0 and 1; FALSE = Recodes pred to factor
 #' @import DMwR
 #' @import caret
 #' @import naniar
@@ -26,53 +28,29 @@
 #' @seealso \link[base]{summary}
 
 preprocess_data <- function(x,
-                            pred        = "Truth",
-                            freq_cut    = 95/5, # Caret's default setting
-                            unique_cut  = 10,   # Caret's default setting
+                            target      = "Truth",
+                            reduce_cols = FALSE,
+                            factor_y    = TRUE,
                             impute      = "zero",
-                            k           = 10,
-                            binary_y    = FALSE) {
-
-  # Step 1:  Required packages (don't include in final function) -----------------
-  require(tidyverse, quietly = T)
-  require(naniar,    quietly = T)
-  require(DMwR,      quietly = T)
-  require(caret,     quietly = T)
-  require(purrrlyr,  quietly = T)
-  require(seplyr,    quietly = T)
-
-  # Step 2:  Make sure data is a data.frame or tibble ----------------------------
+                            corr_cutoff = .90,
+                            freq_cut    = 95/5,
+                            unique_cut  = 10,
+                            k           = 10) {
   if (!is.data.frame(x) | !is_tibble(x)) {
     message("x needs to be a data.frame or tibble")
   }
 
-  # Step 3:  Remove grouped data frame if it's grouped ----------------------------
   if (sum(class(x) == "grouped_df") > 0) {
     x <- x %>% ungroup()
     message("Data has been ungrouped")
   }
 
-  # Step 4:  Remove ID column if present -----------------------------------------
   if (sum(names(x) %>% str_detect("ID")) > 0) {
-    x <- x %>% select(-ID)
+    ids <- x %>% select(ID)
+    x   <- x %>% select(-ID)
     message("ID column has been removed")
   }
 
-  # Step 5:  Filter out any NA in pred column ------------------------------------
-  if (is.na(x[pred]) %>% sum() > 0) {
-
-    # New method using library(seplyr)
-    # https://stackoverflow.com/questions/45261356/why-doesnt-dplyr-filter-work-within-function-i-e-using-variable-for-column
-    x <- x %>% filter_se(paste0("!is.na(", pred, ")"))
-
-    # NAs <- x %>% select(pred) %>% where_na() %>% {.[,1]}
-    # x <- x[-NAs, ]
-
-    message(paste("NAs in column", pred, "have been removed"))
-
-  }
-
-  # Step 6:  Convert Inf values to NA, if any -------------------------------------------
   if ((x %>% map(~ sum(is.infinite(.x)) > 0) %>% unlist() %>% sum()) > 0) {
 
     num_col_inf <- x %>%
@@ -93,85 +71,94 @@ preprocess_data <- function(x,
 
     message(msg)
   }
-  # Step 7:  Impute with knn|mean|zero -------------------------------------------
+  target_column <- x %>% select(target)
+
   if (!impute %in% c("knn","Knn","KNN","mean","Mean",
                      "MEAN","zero","Zero","ZERO","PCA","pca")) {
-
     stop("Argument 'impute' must be either 'knn' or 'mean'", call. = FALSE)
-
   } else if (impute == "knn") {
-
     message("Imputing NAs by knn")
     x <- x %>%
+      select(-target) %>%
       select_if(naniar::any_na) %>%
       as.data.frame() %>%
       knnImputation(k = k) %>%
       as_tibble() %>%
       bind_cols(x %>% select_if(all_complete))
-
-
   } else if (impute == "mean") {
     message("Imputing NAs by column means")
-    x <- x %>% impute_mean_if(any_na)
-
-
+    x <- x %>%
+      select(-target) %>%
+      impute_mean_if(any_na)
   } else if (impute == "zero") {
     message("Replacing NAs with 0")
-    x <- x %>% replace(is.na(.), 0)
+    x <- x %>%
+      select(-target) %>%
+      replace(is.na(.), 0)
   }
-  # Step 8:  Mutate y into a factor or 0|1 ------------------------------------------
+  x <- x %>% bind_cols(target_column)
 
-  if (binary_y == FALSE) {
-    message("Converted ", pred, " into a factor")
+  if (factor_y == TRUE) {
 
     VALUE <- NULL
-    wrapr::let( # This function allows for standard evaluation
-      c(VALUE = pred),
-      x <- x %>% mutate(VALUE = factor(VALUE))
+    wrapr::let(
+      c(VALUE = target),
+      x <- x %>% mutate(VALUE = as.factor(VALUE))
     )
-
+    message("Converted ", target, " into a factor")
   }
 
-  if (binary_y == TRUE) {
+  else if (factor_y == FALSE) {
 
 
     VALUE <- NULL
-    class <- x %>% select(pred) %>% unique(.) %>% unlist() %>% unname()
+    class <- x %>% select(target) %>%
+      unique(.) %>%
+      unlist() %>%
+      unname()
     class_1 <- class[1]
     class_2 <- class[2]
 
     wrapr::let(
-      c(VALUE = pred,
+      c(VALUE = target,
         c1 = class_1,
         c2 = class_2),
       x <- x %>% mutate(VALUE = recode(VALUE, c1 = 0, c2 = 1))
     )
-    message("Converted ", pred, " into binary, ",
+    message("Converted ", target, " into binary, ",
             class_1, " = 0, ", class_2, " = 1")
   }
 
+  if (reduce_cols == TRUE) {
+    message("Finding columns with variance near zero...")
 
-  # Step 9:  Remove columns with variance near zero ------------------------------
-  message("Finding columns with variance near zero...")
+    nzv <- nearZeroVar(x,
+                       saveMetrics    = T,
+                       freqCut        = freq_cut,
+                       uniqueCut      = unique_cut) %>%
+      rownames_to_column() %>%
+      select(rowname, nzv) %>%
+      filter(nzv == TRUE) %>%
+      filter(rowname != "Truth") %>%
+      {.$rowname}
+    num_nzv_columns <- length(nzv)
+    x <- x %>% select(-nzv)
 
-  nzv <- nearZeroVar(x,
-                     saveMetrics    = T,
-                     freqCut        = freq_cut,
-                     uniqueCut      = unique_cut) %>%
-    rownames_to_column() %>%
-    select(rowname, nzv) %>%
-    filter(nzv == TRUE) %>%
-    filter(rowname != "Truth") %>%
-    {.$rowname}
+    message("  Done! Removed ", num_nzv_columns, " columns with variance near zero")
+    message("Finding columns that have a correlation coefficient higher than ",
+            corr_cutoff, "...")
 
-  num_nzv_columns <- length(nzv)
+    vars_cor  <- cor(x %>% select(-target), use = "complete.obs")
+    cor_caret <- findCorrelation(vars_cor, cutoff = corr_cutoff)
+    num_col   <- length(cor_caret)
+    x         <- x %>% select(-cor_caret)
 
-  x <- x %>% select(-nzv)
+    message("  Done! Removed ", num_col, " highly correlated columns")
+  x <- x %>%
+    bind_cols(ids) %>%
+    select(ID, everything())
 
-  message("  Done! Removed ", num_nzv_columns, " columns with variance near zero")
-
-  # Step 10: Return final data frame ---------------------------------------------
   message("DONE!")
   return(x)
-
+  }
 }
