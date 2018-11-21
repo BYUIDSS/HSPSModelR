@@ -3,10 +3,13 @@
 #' Takes a list of trained machine learning models and returns diagnostics as a data frame, as to compare the effectiveness of algorithms. Measures include Accuracy, Prevalence, Detection Rate, F1, Cohen's Kappa, McNemar P-Value, Negative and Positive Predictive value, Precision, Recall, Sensitivity, and Specificity
 #'
 #' @param x A list of models
+#' @param test_data portion of data you are using to test your predictions.
+#' @param predict_var the true values which you are comparing to your predicted values.
 #'
 #' @import caret
 #' @import dplyr
 #' @import tibble
+#' @import stats
 #'
 #' @return This function returns a \code{data.frame} including columns:
 #' \itemize{
@@ -33,12 +36,14 @@
 #' }
 #'
 #' @author "Chad Schaeffer <sch12059@@byui.edu>"
-#'
+#' @export
 
-make_table <- function(x) {
+make_table <- function(x, test_data, predict_var) {
+  dat <- test_data
+  truth <- predict_var
   make_row <- function(i) {
-    p <- predict(i, test)
-    t <- confusionMatrix(table(p, test$Truth))
+    p <- predict(i, dat)
+    t <- confusionMatrix(table(p, truth))
 
     as.data.frame(t[4]) %>%
       rownames_to_column(var = "measure") %>%
@@ -51,14 +56,11 @@ make_table <- function(x) {
       mutate(method = i[1]) %>%
       select(-type)
   }
-
-  row_list <- lapply(list, make_row)
-
+  row_list <- lapply(x, make_row)
   table <- data.frame(matrix(unlist(row_list),
                              nrow = length(row_list),
                              ncol = max(vapply(row_list, length, 0)),
                              byrow = TRUE))
-
   names <- c("Accuracy", "AccuracyLower", "AccuracyNull", "AccuracyPValue", "AccuracyUpper",
              "Balanced Accuracy", "Detection Prevalence", "Detection Rate", "F1",
              "Kappa", "McnemarPValue", "Neg Pred Value", "Pos Pred Value",
@@ -66,3 +68,4 @@ make_table <- function(x) {
   colnames(table) <- names
   return(table)
 }
+make_table(list, test, test$Truth)
