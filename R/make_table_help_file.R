@@ -43,8 +43,11 @@ make_table <- function(x, test_data, predict_var) {
   truth <- predict_var
   make_row <- function(i) {
     p <- predict(i, dat)
-    t <- confusionMatrix(table(p, truth))
-
+    if (length(p) == length(truth)) {
+      t <- confusionMatrix(table(p, truth))
+    } else {
+      stop("'predict_var' must be the same length as 'test_data'", call. = FALSE)
+    }
     as.data.frame(t[4]) %>%
       rownames_to_column(var = "measure") %>%
       rename_at("byClass", ~ "name") %>%
@@ -68,4 +71,3 @@ make_table <- function(x, test_data, predict_var) {
   colnames(table) <- names
   return(table)
 }
-make_table(list, test, test$Truth)
