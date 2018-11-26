@@ -6,10 +6,13 @@
 #' @param test_data portion of data you are using to test your predictions.
 #' @param predict_var the true values which you are comparing to your predicted values.
 #'
-#' @import caret
-#' @import dplyr
-#' @import tibble
-#' @import stats
+#' @importFrom caret confusionMatrix
+#' @importFrom dplyr select filter mutate rename_at bind_rows
+#' @importFrom tibble rownames_to_column
+#' @importFrom stats predict
+#' @importFrom tidyr spread
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #'
 #' @export
 #'
@@ -43,12 +46,15 @@ make_table <- function(x, test_data, predict_var) {
   dat <- test_data
   truth <- predict_var
   make_row <- function(i) {
+
     p <- predict(i, dat)
     if (length(p) == length(truth)) {
       t <- confusionMatrix(table(p, truth))
     } else {
       stop("'predict_var' must be the same length as 'test_data'", call. = FALSE)
+
     }
+
     as.data.frame(t[4]) %>%
       rownames_to_column(var = "measure") %>%
       rename_at("byClass", ~ "name") %>%
@@ -56,9 +62,9 @@ make_table <- function(x, test_data, predict_var) {
                   rownames_to_column(var = "measure") %>%
                   rename_at("overall", ~ "name")) %>%
       mutate(type = "name") %>%
-      spread(measure, name) %>%
+      spread(.data$measure, .data$name) %>%
       mutate(method = i[1]) %>%
-      select(-type)
+      select(-.data$type)
   }
   row_list <- lapply(x, make_row)
   table <- data.frame(matrix(unlist(row_list),

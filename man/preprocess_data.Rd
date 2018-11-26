@@ -4,24 +4,29 @@
 \alias{preprocess_data}
 \title{Pre-process cognostic data}
 \usage{
-preprocess_data(x, pred = "Truth", freq_cut = 95/5, unique_cut = 10,
-  impute = "zero", k = 10, binary_y = FALSE)
+preprocess_data(x, target = "Truth", reduce_cols = FALSE,
+  factor_y = TRUE, impute = "zero", corr_cutoff = 0.9,
+  freq_cut = 95/5, unique_cut = 10, k = 10)
 }
 \arguments{
 \item{x}{data frame or tibble.}
 
-\item{pred}{classifier column}
+\item{target}{classifier column}
+
+\item{reduce_cols}{TRUE = Columns are reduced based on near zero variance and correlation; FALSE = Nothing}
+
+\item{factor_y}{FALSE = Recodes pred to 0 and 1; TRUE = Recodes pred to factor}
+
+\item{impute}{Impute NA by "knn","mean","zero"}
+
+\item{corr_cutoff}{Corelation coefficient level to cut off highly correlated columns, devaulted to .90}
+
+\item{freq_cut}{the cutoff for the ratio of the most common value to the second most common value}
+
+\item{unique_cut}{the cutoff for the percentage of distinct values out of the number of total samples
+(knn takes substantially longer to compute, zero replaces NA with 0)}
 
 \item{k}{the number of nearest neighbours to use for imputate (defaults to 10)}
-
-\item{binary_y}{TRUE = Recodes pred to 0 and 1; FALSE = Recodes pred to factor}
-
-\item{freqCut}{the cutoff for the ratio of the most common value to the second most common value}
-
-\item{uniqueCut}{the cutoff for the percentage of distinct values out of the number of total samples}
-
-\item{impute.method}{Impute NA by "knn","mean","zero", or "pca"
-(knn takes substantially longer to compute, zero replaces NA with 0)}
 }
 \value{
 This function returns a \code{tibble} of optimized features

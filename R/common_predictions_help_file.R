@@ -6,10 +6,12 @@
 #' @param test_data a df, the portion of data you are using to test your predictions.
 #' @param threshold a value between 0 and 1. What ratio of columns do you need to agree on the "Dropped" value
 #'
-#' @import stringr
-#' @import stats
-#' @import purrr
-#' @import dplyr
+#' @importFrom stringr str_replace_all
+#' @importFrom stats predict
+#' @importFrom purrr map_dfc
+#' @importFrom dplyr transmute filter
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #'
 #' @export
 #'
@@ -20,14 +22,16 @@
 
 get_likely_drops <- function(x, test_data, threshold) {
   dat <- test_data
+
   make_predictions <- function(i) {
     predict(i, dat, type = "raw") %>%
       str_replace_all(c("Healthy" = "0", "Dropped" = "1")) %>%
       as.integer()
   }
+
   predictions_array <- map_dfc(x, make_predictions)
   likely_drops <- predictions_array %>%
     transmute(percent_dropped = (rowSums(predictions_array) / ncol(predictions_array))) %>%
-    filter(percent_dropped >= threshold)
+    filter(.data$percent_dropped >= threshold)
   return(likely_drops)
 }
