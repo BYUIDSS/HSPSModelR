@@ -11,10 +11,11 @@
 #' @import purrr
 #' @import dplyr
 #'
+#' @export
+#'
 #' @return This function returns a \code{tibble}, a single column reporting the ratio of like predictions for dropped clients meeting the prediction threshold
 #'
 #' @author "Chad Schaeffer <sch12059@@byui.edu>"
-#' @export
 
 
 get_likely_drops <- function(x, test_data, threshold) {

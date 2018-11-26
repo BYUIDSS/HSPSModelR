@@ -11,6 +11,8 @@
 #' @import tibble
 #' @import stats
 #'
+#' @export
+#'
 #' @return This function returns a \code{data.frame} including columns:
 #' \itemize{
 #'  \item Type
@@ -35,8 +37,7 @@
 #'  \item Method
 #' }
 #'
-#' @author "Chad Schaeffer <sch12059@@byui.edu>"
-#' @export
+#' @author "Chad Schaeffer <sch12059@@byui.edu>
 
 make_table <- function(x, test_data, predict_var) {
   dat <- test_data

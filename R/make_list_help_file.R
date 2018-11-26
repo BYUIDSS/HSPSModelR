@@ -6,6 +6,8 @@
 #' @import stingr
 #' @import rlist
 #' @import readr
+#' @export
+#'
 #' @return This function returns a \code{list} of contents at specified location
 #'
 #' @author "Chad Schaeffer <sch12059@@byui.edu>, Brad Borget <bor13001@@byui.edu>"
