@@ -39,36 +39,48 @@
 #'
 #' @author "Chad Schaeffer <sch12059@@byui.edu>
 
-make_table <- function(x, test_data, predict_var) {
-  dat <- test_data
-  truth <- predict_var
+make_table <- function(x, test_data, target_column) {
+  if (!is.list(x)) {
+    stop("x needs to be a list of models")
+  }
+
+  if (!is.data.frame(test_data) | !is_tibble(test_data)) {
+    stop("x needs to be a data.frame or tibble")
+  } else {
+    test <- test_data
+  }
+
+  if (class(target_column) == "character" | class(target_column) == "string") {
+    stop("target column must be from test data. Use test_data$target_column")
+  } else if (!is.factor(target_column)) {
+    stop("targets must be a vector of factors the same length as test data")
+  } else {
+    targets <- target_column
+  }
+
   make_row <- function(i) {
-    p <- predict(i, dat)
-    if (length(p) == length(truth)) {
-      t <- confusionMatrix(table(p, truth))
-    } else {
-      stop("'predict_var' must be the same length as 'test_data'", call. = FALSE)
+    p <- predict(i, test)
+
+    if (!is.factor(p)) {
+      stop("all models must be able to produce predictions using stats::predict()")
     }
+
+    if (length(p) == length(targets)) {
+      t <- confusionMatrix(p, targets)
+    } else {
+      stop("test data and target vector must be the same length")
+    }
+
     as.data.frame(t[4]) %>%
       rownames_to_column(var = "measure") %>%
       rename_at("byClass", ~ "name") %>%
       bind_rows((as.data.frame(t[3])) %>%
                   rownames_to_column(var = "measure") %>%
                   rename_at("overall", ~ "name")) %>%
-      mutate(type = "name") %>%
-      spread(measure, name) %>%
       mutate(method = i[1]) %>%
-      select(-type)
-  }
-  row_list <- lapply(x, make_row)
-  table <- data.frame(matrix(unlist(row_list),
-                             nrow = length(row_list),
-                             ncol = max(vapply(row_list, length, 0)),
-                             byrow = TRUE))
-  names <- c("Accuracy", "AccuracyLower", "AccuracyNull", "AccuracyPValue", "AccuracyUpper",
-             "Balanced Accuracy", "Detection Prevalence", "Detection Rate", "F1",
-             "Kappa", "McnemarPValue", "Neg Pred Value", "Pos Pred Value",
-             "Precision", "Prevalence", "Recall", "Sensitivity", "Specificity", "Method")
-  colnames(table) <- names
-  return(table)
+      spread(measure, name)
+      }
+
+  return(map_dfr(x, make_row))
 }
+

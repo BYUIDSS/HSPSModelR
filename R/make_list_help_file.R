@@ -10,7 +10,7 @@
 #'
 #' @return This function returns a \code{list} of contents at specified location
 #'
-#' @author "Chad Schaeffer <sch12059@@byui.edu>, Brad Borget <bor13001@@byui.edu>"
+#' @author "Brad Borget <bor13001@@byui.edu>, Chad Schaeffer <sch12059@@byui.edu>"
 
 make_list <- function(x) {
   file.names <- dir(x, pattern =".rds")
