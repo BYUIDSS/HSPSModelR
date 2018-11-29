@@ -6,10 +6,13 @@
 #' @param test_data portion of data you are using to test your predictions.
 #' @param predict_var the true values which you are comparing to your predicted values.
 #'
-#' @import caret
-#' @import dplyr
-#' @import tibble
-#' @import stats
+#' @importFrom caret confusionMatrix
+#' @importFrom dplyr select filter mutate rename_at bind_rows
+#' @importFrom tibble rownames_to_column
+#' @importFrom stats predict
+#' @importFrom tidyr spread
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #'
 #' @export
 #'
@@ -59,6 +62,7 @@ make_table <- function(x, test_data, target_column) {
   }
 
   make_row <- function(i) {
+<<<<<<< HEAD
     p <- predict(i, test)
 
     if (!is.factor(p)) {
@@ -69,6 +73,15 @@ make_table <- function(x, test_data, target_column) {
       t <- confusionMatrix(p, targets)
     } else {
       stop("test data and target vector must be the same length")
+=======
+
+    p <- predict(i, dat)
+    if (length(p) == length(truth)) {
+      t <- confusionMatrix(table(p, truth))
+    } else {
+      stop("'predict_var' must be the same length as 'test_data'", call. = FALSE)
+
+>>>>>>> 2c0f7c8eaf80c3e4e548ada78c73ed08f1f069a3
     }
 
     as.data.frame(t[4]) %>%
@@ -77,10 +90,29 @@ make_table <- function(x, test_data, target_column) {
       bind_rows((as.data.frame(t[3])) %>%
                   rownames_to_column(var = "measure") %>%
                   rename_at("overall", ~ "name")) %>%
+<<<<<<< HEAD
       mutate(method = i[1]) %>%
       spread(measure, name)
       }
 
   return(map_dfr(x, make_row))
+=======
+      mutate(type = "name") %>%
+      spread(.data$measure, .data$name) %>%
+      mutate(method = i[1]) %>%
+      select(-.data$type)
+  }
+  row_list <- lapply(x, make_row)
+  table <- data.frame(matrix(unlist(row_list),
+                             nrow = length(row_list),
+                             ncol = max(vapply(row_list, length, 0)),
+                             byrow = TRUE))
+  names <- c("Accuracy", "AccuracyLower", "AccuracyNull", "AccuracyPValue", "AccuracyUpper",
+             "Balanced Accuracy", "Detection Prevalence", "Detection Rate", "F1",
+             "Kappa", "McnemarPValue", "Neg Pred Value", "Pos Pred Value",
+             "Precision", "Prevalence", "Recall", "Sensitivity", "Specificity", "Method")
+  colnames(table) <- names
+  return(table)
+>>>>>>> 2c0f7c8eaf80c3e4e548ada78c73ed08f1f069a3
 }
 

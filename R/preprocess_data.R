@@ -10,16 +10,22 @@
 #' @param factor_y FALSE = Recodes pred to 0 and 1; TRUE = Recodes pred to factor
 #' @param impute Impute NA by "knn","mean","zero"
 #' @param corr_cutoff Corelation coefficient level to cut off highly correlated columns, devaulted to .90
-#' @param freqCut the cutoff for the ratio of the most common value to the second most common value
-#' @param uniqueCut the cutoff for the percentage of distinct values out of the number of total samples
+#' @param freq_cut the cutoff for the ratio of the most common value to the second most common value
+#' @param unique_cut the cutoff for the percentage of distinct values out of the number of total samples
 #' (knn takes substantially longer to compute, zero replaces NA with 0)
 #' @param k the number of nearest neighbours to use for imputate (defaults to 10)
-#' @import DMwR
-#' @import caret
-#' @import naniar
-#' @import purrrlyr
-#' @import seplyr
-#' @import tidyverse
+#' @importFrom DMwR knnImputation
+#' @importFrom caret findCorrelation nearZeroVar
+#' @importFrom naniar impute_mean_if all_complete any_na
+#' @importFrom purrrlyr dmap
+#' @importFrom wrapr let
+#' @importFrom tibble is_tibble as_tibble rownames_to_column
+#' @importFrom dplyr select filter ungroup na_if bind_cols everything select_if
+#' @importFrom stringr str_detect
+#' @importFrom purrr map
+#' @importFrom tidyr gather spread
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 #'
 #' @return This function returns a \code{tibble} of optimized features
@@ -46,8 +52,8 @@ preprocess_data <- function(x,
   }
 
   if (sum(names(x) %>% str_detect("ID")) > 0) {
-    ids <- x %>% select(ID)
-    x   <- x %>% select(-ID)
+    ids <- x %>% select(.data$ID)
+    x   <- x %>% select(-.data$ID)
     message("ID column has been removed")
   }
 
@@ -63,8 +69,8 @@ preprocess_data <- function(x,
     num_inf <- x  %>%
       dmap(is.na) %>%
       dmap(sum)   %>%
-      gather(features, num_inf) %>%
-      {.$num_inf} %>% sum()
+      gather(.data$features, num_inf) %>%
+      {.data$.$num_inf} %>% sum()
 
     msg <- paste("  There were", num_col_inf, "columns and", num_inf,
                  "data points containing Inf values converted to NA")
@@ -94,7 +100,7 @@ preprocess_data <- function(x,
     message("Replacing NAs with 0")
     x <- x %>%
       select(-target) %>%
-      replace(is.na(.), 0)
+      replace(is.na(.data$.), 0)
   }
   x <- x %>% bind_cols(target_column)
 
@@ -113,7 +119,7 @@ preprocess_data <- function(x,
 
     VALUE <- NULL
     class <- x %>% select(target) %>%
-      unique(.) %>%
+      unique(.data$.) %>%
       unlist() %>%
       unname()
     class_1 <- class[1]
@@ -137,10 +143,10 @@ preprocess_data <- function(x,
                        freqCut        = freq_cut,
                        uniqueCut      = unique_cut) %>%
       rownames_to_column() %>%
-      select(rowname, nzv) %>%
+      select(.data$rowname, nzv) %>%
       filter(nzv == TRUE) %>%
-      filter(rowname != "Truth") %>%
-      {.$rowname}
+      filter(.data$rowname != "Truth") %>%
+      {.data$.$rowname}
     num_nzv_columns <- length(nzv)
     x <- x %>% select(-nzv)
 
@@ -156,7 +162,7 @@ preprocess_data <- function(x,
     message("  Done! Removed ", num_col, " highly correlated columns")
   x <- x %>%
     bind_cols(ids) %>%
-    select(ID, everything())
+    select(.data$ID, everything())
 
   message("DONE!")
   return(x)
