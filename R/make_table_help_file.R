@@ -4,7 +4,7 @@
 #'
 #' @param x A list of models
 #' @param test_data portion of data you are using to test your predictions.
-#' @param predict_var the true values which you are comparing to your predicted values.
+#' @param target_column the true values which you are comparing to your predicted values.
 #'
 #' @importFrom caret confusionMatrix
 #' @importFrom dplyr select filter mutate rename_at bind_rows

@@ -10,12 +10,8 @@
 #' @importFrom rlang .data
 #' @return This function returns a \code{list} of contents at specified location
 #'
-<<<<<<< HEAD
-#' @author "Brad Borget <bor13001@@byui.edu>, Chad Schaeffer <sch12059@@byui.edu>"
-=======
 #' @author "Chad Schaeffer <sch12059@@byui.edu>, Brad Borget <bor13001@@byui.edu>"
 #' @export
->>>>>>> 2c0f7c8eaf80c3e4e548ada78c73ed08f1f069a3
 
 make_list <- function(x) {
   file.names <- dir(x, pattern = ".rds")

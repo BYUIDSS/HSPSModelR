@@ -4,14 +4,14 @@
 \alias{make_table}
 \title{Make a machine learning diagnostics table}
 \usage{
-make_table(x, test_data, predict_var)
+make_table(x, test_data, target_column)
 }
 \arguments{
 \item{x}{A list of models}
 
 \item{test_data}{portion of data you are using to test your predictions.}
 
-\item{predict_var}{the true values which you are comparing to your predicted values.}
+\item{target_column}{the true values which you are comparing to your predicted values.}
 }
 \value{
 This function returns a \code{data.frame} including columns:

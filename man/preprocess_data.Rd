@@ -38,7 +38,7 @@ Generates a tibble with features optimized for machine learning
 This is the details section
 }
 \seealso{
-\link[base]{summary}
+\link[caret]{preProcess}
 }
 \author{
 "Dallin Webb <dallinwebb@byui.edu>"

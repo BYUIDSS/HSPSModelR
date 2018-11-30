@@ -31,7 +31,7 @@
 #' @return This function returns a \code{tibble} of optimized features
 #'
 #' @author "Dallin Webb <dallinwebb@@byui.edu>"
-#' @seealso \link[base]{summary}
+#' @seealso \link[caret]{preProcess}
 
 preprocess_data <- function(x,
                             target      = "Truth",
@@ -52,8 +52,8 @@ preprocess_data <- function(x,
   }
 
   if (sum(names(x) %>% str_detect("ID")) > 0) {
-    ids <- x %>% select(.data$ID)
-    x   <- x %>% select(-.data$ID)
+    ids <- x %>% select(ID)
+    x   <- x %>% select(-ID)
     message("ID column has been removed")
   }
 
@@ -69,8 +69,8 @@ preprocess_data <- function(x,
     num_inf <- x  %>%
       dmap(is.na) %>%
       dmap(sum)   %>%
-      gather(.data$features, num_inf) %>%
-      {.data$.$num_inf} %>% sum()
+      gather(features, num_inf) %>%
+      {.$num_inf} %>% sum()
 
     msg <- paste("  There were", num_col_inf, "columns and", num_inf,
                  "data points containing Inf values converted to NA")
@@ -100,7 +100,7 @@ preprocess_data <- function(x,
     message("Replacing NAs with 0")
     x <- x %>%
       select(-target) %>%
-      replace(is.na(.data$.), 0)
+      replace(is.na(.), 0)
   }
   x <- x %>% bind_cols(target_column)
 
@@ -116,10 +116,9 @@ preprocess_data <- function(x,
 
   else if (factor_y == FALSE) {
 
-
     VALUE <- NULL
     class <- x %>% select(target) %>%
-      unique(.data$.) %>%
+      unique(.) %>%
       unlist() %>%
       unname()
     class_1 <- class[1]
@@ -143,10 +142,10 @@ preprocess_data <- function(x,
                        freqCut        = freq_cut,
                        uniqueCut      = unique_cut) %>%
       rownames_to_column() %>%
-      select(.data$rowname, nzv) %>%
+      select(rowname, nzv) %>%
       filter(nzv == TRUE) %>%
-      filter(.data$rowname != "Truth") %>%
-      {.data$.$rowname}
+      filter(rowname != "Truth") %>%
+      {.$rowname}
     num_nzv_columns <- length(nzv)
     x <- x %>% select(-nzv)
 
@@ -162,7 +161,7 @@ preprocess_data <- function(x,
     message("  Done! Removed ", num_col, " highly correlated columns")
   x <- x %>%
     bind_cols(ids) %>%
-    select(.data$ID, everything())
+    select(ID, everything())
 
   message("DONE!")
   return(x)
