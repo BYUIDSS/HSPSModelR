@@ -1,6 +1,6 @@
 #' Make a machine learning diagnostics table
 #'
-#' Takes a list of trained machine learning models and returns diagnostics as a data frame, as to compare the effectiveness of algorithms. Measures include Accuracy, Prevalence, Detection Rate, F1, Cohen's Kappa, McNemar P-Value, Negative and Positive Predictive value, Precision, Recall, Sensitivity, and Specificity
+#' Takes a list of trained machine learning models and returns diagnostics as a data frame as to compare the effectiveness of algorithms. Measures include Accuracy, Prevalence, Detection Rate, F1, Cohen's Kappa, McNemar P-Value, Negative and Positive Predictive value, Precision, Recall, Sensitivity, and Specificity
 #'
 #' @param x A list of models
 #' @param test_data portion of data you are using to test your predictions.
@@ -37,7 +37,7 @@
 #'  \item Recall
 #'  \item Sensitivity
 #'  \item Specificty
-#'  \item Method
+#'  \item Method; the algorithm used to train each particular model
 #' }
 #'
 #' @author "Chad Schaeffer <sch12059@@byui.edu>
@@ -54,7 +54,7 @@ make_table <- function(x, test_data, target) {
     test <- test_data
   }
 
-  if (!is.factor(target)) {
+  if (length(test) != length(target_column)) {
     stop("targets must be a vector of factors the same length as test data")
   } else {
     target_column <- test %>% select(target) %>% as.data.frame()
