@@ -50,7 +50,7 @@ get_common_predictions <- function(x, test_data, factor, threshold) {
 
   predictions_array <- map_dfc(x, make_predictions)
 
-  if (threshold > 1 | threshold < 0){
+  if (threshold > 1 | threshold < 0) {
     stop("threshold must be an integer between 0 and 1")
   }
   else {
