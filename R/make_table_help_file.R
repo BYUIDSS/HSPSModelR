@@ -54,7 +54,7 @@ make_table <- function(x, test_data, target) {
     test <- test_data
   }
 
-  if (length(test) != length(target_column)) {
+  if (length(test) != length(target)) {
     stop("targets must be a vector of factors the same length as test data")
   } else {
     target_column <- test %>% select(target) %>% as.data.frame()
