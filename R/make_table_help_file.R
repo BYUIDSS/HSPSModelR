@@ -42,7 +42,7 @@
 #'
 #' @author "Chad Schaeffer <sch12059@@byui.edu>
 
-make_table <- function(x, test_data, target_column) {
+make_table <- function(x, test_data, target) {
 
   if (!is.list(x)) {
     stop("x needs to be a list of models")
@@ -54,12 +54,10 @@ make_table <- function(x, test_data, target_column) {
     test <- test_data
   }
 
-  if (class(target_column) == "character" | class(target_column) == "string") {
-    stop("target column must be from test data. Use test_data$target_column")
-  } else if (!is.factor(target_column)) {
+  if (!is.factor(target)) {
     stop("targets must be a vector of factors the same length as test data")
   } else {
-    targets <- target_column
+    target_column <- test %>% select(target) %>% as.data.frame()
   }
 
   make_row <- function(i) {
@@ -69,8 +67,8 @@ make_table <- function(x, test_data, target_column) {
       stop("all models must be able to produce predictions using stats::predict()")
     }
 
-    if (length(p) == length(targets)) {
-      t <- confusionMatrix(p, targets)
+    if (length(p) == length(target_column)) {
+      t <- confusionMatrix(p, target_column)
     } else {
       stop("test data and target vector must be the same length")
     }
