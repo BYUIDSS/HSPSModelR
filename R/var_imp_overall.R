@@ -8,7 +8,7 @@
 #'
 #' @param models List of models of class \code{train}
 #' @importFrom dplyr select filter mutate arrange top_n row_number rename
-#' count group_by percent_rank summarise desc
+#'  count group_by percent_rank summarise desc
 #' @importFrom purrr map possibly
 #' @importFrom tidyr gather unnest
 #' @importFrom rlist list.clean
@@ -29,7 +29,6 @@
 #' @author "Dallin Webb <dallinwebb@@byui.edu>"
 #' @seealso \link[caret]{varImp}
 var_imp_overall <- function(models) {
-
   if (class(models) != "list" | class(models[[1]]) != "train") {
     stop("models argument must be a list of models of class 'train'")
   }
@@ -81,9 +80,9 @@ var_imp_overall <- function(models) {
     rename(features = rowname) %>%
     count(features, rank) %>%
     mutate(rank_inverse = (max(rank) + 1) - rank,
-           rank_multplied = rank_inverse * n) %>%
+           rank_multiplied = rank_inverse * n) %>%
     group_by(features) %>%
-    summarise(rank = sum(rank_multplied)) %>%
+    summarise(rank = sum(rank_multiplied)) %>%
     arrange(desc(rank)) %>%
     mutate(rank_place  = row_number(),
            rank_scaled = (rank - min(rank))/(max(rank) - min(rank)))

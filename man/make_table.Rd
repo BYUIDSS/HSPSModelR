@@ -35,11 +35,11 @@ This function returns a \code{data.frame} including columns:
  \item Recall
  \item Sensitivity
  \item Specificty
- \item Method
+ \item Method; the algorithm used to train each particular model
 }
 }
 \description{
-Takes a list of trained machine learning models and returns diagnostics as a data frame, as to compare the effectiveness of algorithms. Measures include Accuracy, Prevalence, Detection Rate, F1, Cohen's Kappa, McNemar P-Value, Negative and Positive Predictive value, Precision, Recall, Sensitivity, and Specificity
+Takes a list of trained machine learning models and returns diagnostics as a data frame as to compare the effectiveness of algorithms. Measures include Accuracy, Prevalence, Detection Rate, F1, Cohen's Kappa, McNemar P-Value, Negative and Positive Predictive value, Precision, Recall, Sensitivity, and Specificity
 }
 \author{
 "Chad Schaeffer <sch12059@byui.edu>

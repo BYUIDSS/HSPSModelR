@@ -21,11 +21,12 @@
 #' @importFrom wrapr let
 #' @importFrom tibble is_tibble as_tibble rownames_to_column
 #' @importFrom dplyr select filter ungroup na_if bind_cols everything select_if
+#' recode
 #' @importFrom stringr str_detect
 #' @importFrom purrr map
 #' @importFrom tidyr gather spread
 #' @importFrom magrittr %>%
-#' @importFrom rlang .data
+#' @importFrom stats cor
 #' @export
 #'
 #' @return This function returns a \code{tibble} of optimized features

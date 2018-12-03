@@ -1,10 +1,10 @@
 # optimal_models <- function(x,
 #                            target,
-#                            measure = Accuracy,
-#                            length = 5,
+#                            measure    = Accuracy,
+#                            length     = 5,
 #                            train_size = .08,
-#                            seed = 1,
-#                            folds = 3
+#                            seed       = 1,
+#                            folds      = 3
 #                            #write = FALSE,
 #                            #write_wd,
 #                            ) {
@@ -15,7 +15,7 @@
 #   rows <- hs %>% nrow() %>% sample()
 #   # rows <- BYUImachine::preprocess_data(hs, "Truth", impute = "zero") %>% nrow() %>% sample()
 #   hs <- hs[rows, ]
-#   split <- round(nrow(hs)* train_size)
+#   split <- round(nrow(hs) * train_size)
 #   train <- hs[1:split, ] %>% na.omit()
 #   test <- hs[(split + 1):nrow(hs), ] %>% na.omit()
 #   target_column <- test %>% select(target)

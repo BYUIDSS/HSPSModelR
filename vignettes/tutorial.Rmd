@@ -16,6 +16,8 @@ library(BYUImachine)
 
 The **BYUImachine** package has several useful functions for machine learning tasks, specifically concerning classification. The following tutorial expounds systematically on the application of this package for a cognostic dataset for which one would like to predict an outcome for each row.
 
+<br>
+
 ## Getting Started
 
 **get a list of powerful models**
@@ -33,6 +35,8 @@ The optimal_models function takes a raw dataset and outputs (by default) a list 
 ```
 
 The get_common_predictions function takes a list of models and outputs a vector of rows whose desired outcomes were agreed upon by a prespecified ratio of models. Downloading the BYUImachine package and running optimal_models then get_common_predictions is the fastest way to get from raw data to quality results.
+
+<br>
 
 ## Other options
 
@@ -55,7 +59,7 @@ The above function is especially useful if one already has trained models. If se
 **Preprocess data**
 
 ```{r}
- # preprocess_data(x = data)
+# preprocess_data(x = cognostics, target = "Truth", reduce_cols = TRUE)
 ```
 
 For those who have not yet created models, the preprocess_data function prepares raw data for virtually any training method. This function reduces the overall vector size by eliminating features with little to no variance, imputing missing values, and so forth. This function does not scale or perform any other major data tranformation. Such transformations should be specified while training as to be more easily reverted for interpretation purposes.

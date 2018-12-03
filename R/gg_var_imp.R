@@ -8,7 +8,8 @@
 #' @param top_num \code{integer} number of top features to display
 #' @importFrom dplyr top_n mutate
 #' @importFrom forcats fct_reorder
-#' @importFrom ggplot2 ggplot aes geom_point coord_flip theme_minimal labs theme %+%
+#' @importFrom ggplot2 ggplot aes geom_point coord_flip theme_minimal labs theme
+#'  %+% element_blank
 #' @importFrom tibble tibble
 #' @importFrom magrittr %>%
 #' @export

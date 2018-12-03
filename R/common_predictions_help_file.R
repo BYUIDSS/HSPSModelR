@@ -7,13 +7,12 @@
 #' @param test_data a df, the portion of data you are using to test your predictions.
 #' @param threshold a value between 0 and 1. What ratio of columns do you need to agree your target factor?
 #'
-#' @importFrom stringr str_replace_all
+#' @importFrom stringr str_replace_all str_detect
 #' @importFrom stats predict
 #' @importFrom purrr map_dfc
-#' @importFrom dplyr transmute filter
+#' @importFrom dplyr transmute filter case_when
 #' @importFrom magrittr %>%
-#' @importFrom rlang .data
-#'
+#' @importFrom tibble is_tibble as_tibble
 #' @export
 #'
 #' @return This function returns a \code{tibble}, a single column reporting the ratio of like predictions for dropped clients meeting the prediction threshold
@@ -40,7 +39,7 @@ get_common_predictions <- function(x, test_data, factor, threshold) {
     } else {
       p %>%
         as.factor() %>%
-        as.tibble() %>%
+        as_tibble() %>%
         transmute(new = case_when(
           value %in% factor ~ 1,
           TRUE ~ 0

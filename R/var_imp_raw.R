@@ -34,11 +34,11 @@ var_imp_raw <- function(models) {
 
 
   varImp_possibly <- possibly(varImp, otherwise = "Non-optimised model")
-  suppressWarnings(
-    imp_vars <- models %>%
+ # suppressWarnings(
+      imp_vars <- models %>%
       purrr::map(varImp_possibly) %>%
       rlist::list.clean(fun = is.character)
-  )
+  #)
 
   post_length <- length(imp_vars)
 

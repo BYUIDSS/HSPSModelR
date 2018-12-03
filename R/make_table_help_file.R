@@ -12,8 +12,7 @@
 #' @importFrom stats predict
 #' @importFrom tidyr spread
 #' @importFrom magrittr %>%
-#' @importFrom rlang .data
-#'
+#' @importFrom purrr map_dfr
 #' @export
 #'
 #' @return This function returns a \code{data.frame} including columns:

@@ -7,7 +7,7 @@
 #' @importFrom rlist list.append
 #' @importFrom readr read_rds
 #' @importFrom magrittr %>%
-#' @importFrom rlang .data
+#'
 #' @return This function returns a \code{list} of contents at specified location
 #'
 #' @author "Chad Schaeffer <sch12059@@byui.edu>, Brad Borget <bor13001@@byui.edu>"
