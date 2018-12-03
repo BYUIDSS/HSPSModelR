@@ -1,0 +1,83 @@
+---
+title: "Systematic implementation of BYUImachine"
+author: "Brad Borget, Spencer Cook, Chad Schaeffer, Nic Stover, Dallin Webb"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r}
+library(BYUImachine)
+```
+
+
+The **BYUImachine** package has several useful functions for machine learning tasks, specifically concerning classification. The following tutorial expounds systematically on the application of this package for a cognostic dataset for which one would like to predict an outcome for each row.
+
+<br>
+
+## Getting Started
+
+**get a list of powerful models**
+
+```{r}
+ # models <- optimal_models(x = data, target_column = targets)
+```
+
+The optimal_models function takes a raw dataset and outputs (by default) a list of 5 models boasting the highest accuracy. This function takes considerable time to run as it trains 50 classification methods from the caret package. Many preprocessing and training parameters can be specified, as can the desired metric by which model success is measured. Additionally, the length of models returned can be adjusted; for example one can have all 50 models saved if they do not yet know all that they will use the models for and would like to avoid training them in the future.
+
+**Make Predictions**
+
+```{r}
+ # get_common_predictions(x = models, test_data = test, factor = "Dropped", threshold = 0.90)
+```
+
+The get_common_predictions function takes a list of models and outputs a vector of rows whose desired outcomes were agreed upon by a prespecified ratio of models. Downloading the BYUImachine package and running optimal_models then get_common_predictions is the fastest way to get from raw data to quality results.
+
+<br>
+
+## Other options
+
+**View a table of model diagnostics**
+
+```{r}
+ # make_table(x = models, test_data = test, target_column = targets)
+```
+
+The make_table function takes a list of models and outputs a dataframe where each row represents a trained model (labeled by the training method) and each column is a diagnostic. The diagnostics are all those calculated in the caret::confusionMatrix function, which here is iterated through for several models and rebound into table format for maunal investigation and model selection.
+
+**Compile models from a directory**
+
+The above function is especially useful if one already has trained models. If several models are stored in the same directory, the make_list function can pull them into a single object in your R environment.
+
+```{r}
+ # make_list(x = file_path)
+```
+
+**Preprocess data**
+
+```{r}
+# preprocess_data(x = cognostics, target = "Truth", reduce_cols = TRUE)
+```
+
+For those who have not yet created models, the preprocess_data function prepares raw data for virtually any training method. This function reduces the overall vector size by eliminating features with little to no variance, imputing missing values, and so forth. This function does not scale or perform any other major data tranformation. Such transformations should be specified while training as to be more easily reverted for interpretation purposes.
+
+**Variable Importance**
+
+```{r}
+ # var_imp_overall(models)
+ # var_imp_raw(models)
+```
+
+The var_imp functions output tibbles where rows rank the individual contribution of features to final predictions. var_imp_overall ranks the most influential features from among the entire list of models, whereas var_imp_raw gives the most important variable in sequence from each model listed in the function.
+
+
+
+
+
+
+
+
+
