@@ -42,7 +42,7 @@
 #'
 #' @author "Chad Schaeffer <sch12059@@byui.edu>
 
-make_table <- function(x, test_data, target) {
+make_table <- function(x, test_data, target_column) {
 
   if (!is.list(x)) {
     stop("x needs to be a list of models")
@@ -54,12 +54,6 @@ make_table <- function(x, test_data, target) {
     test <- test_data
   }
 
-  if (length(test) != length(target)) {
-    stop("targets must be a vector of factors the same length as test data")
-  } else {
-    target_column <- test %>% select(target) %>% as.data.frame()
-  }
-
   make_row <- function(i) {
     p <- predict(i, test)
 
@@ -67,11 +61,7 @@ make_table <- function(x, test_data, target) {
       stop("all models must be able to produce predictions using stats::predict()")
     }
 
-    if (length(p) == length(target_column)) {
       t <- confusionMatrix(p, target_column)
-    } else {
-      stop("test data and target vector must be the same length")
-    }
 
       as.data.frame(t[4]) %>%
         rownames_to_column(var = "measure") %>%
@@ -85,5 +75,3 @@ make_table <- function(x, test_data, target) {
 
     return(map_dfr(x, make_row))
 }
-
-
