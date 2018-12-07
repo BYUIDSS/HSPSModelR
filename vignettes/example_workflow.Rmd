@@ -29,6 +29,8 @@ vignette: >
 The `preprocess_data` function's main purpose is to reduce unnessesary predictor columns using correlation and variance. It also has the ability to impute missing data and change the target class into either factor or binary. 
 
 ```{r}
+devtools::install_github("BYUIDSS/BYUImachine")
+
 library(caret)
 library(BYUImachine)
 library(tidyverse)
@@ -64,8 +66,8 @@ test_y  <- dhfr_reduced %>% slice(-index) %>% select( Y) %>% as_vector() %>% unn
 
 This function takes considerable time to run as it trains 50 classification methods from the caret package. Many preprocessing and training parameters can be specified such as preprocess, folds, iterations, etc. Since caret includes a lot of information in each `train` object, this function implements a trimming method to retain just enough information to be able to predict.
 
-```{r}
-models_list <- run_models(train_x, train_y, trim_models = TRUE)
+```{r include=FALSE}
+models_list <- BYUImachine::run_models(train_x, train_y, trim_models = TRUE)
 ```
 
 <br>
@@ -75,15 +77,17 @@ models_list <- run_models(train_x, train_y, trim_models = TRUE)
 This function extracts the performance measures from each model in a list.
 
 ```{r}
-model_performance <- get_performance(list_of_models = models_list, 
-                                     pred           = test_x, 
-                                     target         = test_y)
+model_performance <- get_performance(list_of_models = models_list,
+                                                  pred           = test_x,
+                                                  target         = test_y)
+
+model_performance
 ```
 
 Further exploration can be performed to view a specific measurement 
 
 ```{r}
-model_performance %>% 
+model_performance %>%
   filter(measure == "F1")
 ```
 
