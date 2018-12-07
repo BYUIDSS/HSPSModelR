@@ -19,6 +19,10 @@ vignette: >
 
 ```{r message=FALSE, warning=FALSE}
 #devtools::install_github("BYUIDSS/BYUImachine")
+library(caret)
+library(dplyr)
+library(purrr)
+library(BYUImachine)
 ```
 
 
@@ -28,21 +32,17 @@ vignette: >
 
 The `preprocess_data` function's main purpose is to reduce unnessesary predictor columns using correlation and variance. It also has the ability to impute missing data and change the target class into either factor or binary. 
 
-```{r}
-devtools::install_github("BYUIDSS/BYUImachine")
-
-library(caret)
-library(BYUImachine)
-library(tidyverse)
-
+```{r message=FALSE}
 data(dhfr)
 
-ncol(dhfr)
-
 dhfr_reduced <- preprocess_data(dhfr, target = "Y", reduce_cols = T)
+```
 
+```{r}
+ncol(dhfr)
 ncol(dhfr_reduced)
 ```
+
 
 This function does not scale or perform any other major data tranformation. Such transformations should be specified while training as to be more easily reverted for interpretation purposes. For more options, see `caret`'s pre-processing functions [here](http://topepo.github.io/caret/pre-processing.html){target="_blank"}.
 
@@ -124,12 +124,23 @@ The above function is especially useful if one already has trained models. If se
  # make_list(x = file_path)
 ```
 
+<br>
 
-**Variable Importance**
+## Extract variable importance with `var_imp_*()`
+
+The `var_imp_*` functions output tibbles where rows rank the individual contribution of features to final predictions. `var_imp_overall` ranks the most influential features from among the entire list of models, whereas `var_imp_raw` gives the most important variable in sequence from each model listed in the function.
 
 ```{r}
- # var_imp_overall(models)
- # var_imp_raw(models)
+ var_imp_overall(models_list)
+ var_imp_raw(models_list)
 ```
 
-The var_imp functions output tibbles where rows rank the individual contribution of features to final predictions. var_imp_overall ranks the most influential features from among the entire list of models, whereas var_imp_raw gives the most important variable in sequence from each model listed in the function.
+`gg_var_imp()` is available to quickly visualize these variables, allowing you to specify the top number of ranked variables with the `top_num` argument.
+
+```{r fig.width=7}
+vars <- var_imp_overall(models_list)
+
+gg_var_imp(vars, top_num = 20)
+```
+
+

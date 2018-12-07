@@ -24,12 +24,13 @@
 #'
 #' @author "Dallin Webb <dallinwebb@@byui.edu>"
 #' @seealso \link[caret]{varImp}
-gg_var_imp <- function(data, top_num = 10) {
+gg_var_imp <- function(data, top_num = 20) {
 
   if (!sum(c("features","rank_scaled") %in% names(data)) == 2) {
     stop("Data must contain 'features' and 'rank_scaled' columns ",
          "produced by the 'BYUImachine::var_imp_overall() function")
   }
+
 
   data %>%
     top_n(top_num, rank_scaled) %>%

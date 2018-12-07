@@ -19,6 +19,7 @@ globalVariables(
     "test_x",
     "test_y",
     "score",
-    "method"
+    "method",
+    "twoClassSummary"
     )
   )

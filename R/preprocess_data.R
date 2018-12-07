@@ -43,9 +43,9 @@ preprocess_data <- function(x,
                             freq_cut    = 95/5,
                             unique_cut  = 10,
                             k           = 10) {
-  if (!is.data.frame(x) | !is_tibble(x)) {
-    message("x needs to be a data.frame or tibble")
-  }
+  # if (!is.data.frame(x) | !is_tibble(x)) {
+  #   message("x needs to be a data.frame or tibble")
+  # }
 
   if (sum(class(x) == "grouped_df") > 0) {
     x <- x %>% ungroup()

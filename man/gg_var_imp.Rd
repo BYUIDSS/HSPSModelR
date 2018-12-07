@@ -4,7 +4,7 @@
 \alias{gg_var_imp}
 \title{Visualize extracted overall feature importance}
 \usage{
-gg_var_imp(data, top_num = 10)
+gg_var_imp(data, top_num = 20)
 }
 \arguments{
 \item{data}{tibble of results from \code{BYUImachine::var_imp_overall()}}
