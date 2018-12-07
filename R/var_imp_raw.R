@@ -26,7 +26,7 @@
 #' @seealso \link[caret]{varImp}
 var_imp_raw <- function(models) {
 
-  if (class(models) != "list" | class(models[[1]]) != "train") {
+  if (!(class(models) %in% c("list","caretList")) | class(models[[1]]) != "train") {
     stop("models argument must be a list of models of class 'train'")
   }
 
@@ -34,11 +34,11 @@ var_imp_raw <- function(models) {
 
 
   varImp_possibly <- possibly(varImp, otherwise = "Non-optimised model")
- # suppressWarnings(
+  suppressWarnings(
       imp_vars <- models %>%
       purrr::map(varImp_possibly) %>%
       rlist::list.clean(fun = is.character)
-  #)
+  )
 
   post_length <- length(imp_vars)
 

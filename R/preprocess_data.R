@@ -55,8 +55,10 @@ preprocess_data <- function(x,
   if (sum(names(x) %>% str_detect("ID")) > 0) {
     ids <- x %>% select(ID)
     x   <- x %>% select(-ID)
+    has_id <- TRUE
     message("ID column has been removed")
-  }
+
+  } else has_id <- FALSE
 
   if ((x %>% map(~ sum(is.infinite(.x)) > 0) %>% unlist() %>% sum()) > 0) {
 
@@ -105,18 +107,18 @@ preprocess_data <- function(x,
   }
   x <- x %>% bind_cols(target_column)
 
-  if (factor_y == TRUE) {
+  if (target_column %>% is.factor() == TRUE) {
+    message("Target is already a factor")
 
+  } else if (factor_y == TRUE) {
     VALUE <- NULL
     wrapr::let(
       c(VALUE = target),
       x <- x %>% mutate(VALUE = as.factor(VALUE))
     )
     message("Converted ", target, " into a factor")
-  }
 
-  else if (factor_y == FALSE) {
-
+  } else if (factor_y == FALSE) {
     VALUE <- NULL
     class <- x %>% select(target) %>%
       unique(.) %>%
@@ -160,11 +162,17 @@ preprocess_data <- function(x,
     x         <- x %>% select(-cor_caret)
 
     message("  Done! Removed ", num_col, " highly correlated columns")
-  x <- x %>%
-    bind_cols(ids) %>%
-    select(ID, everything())
 
-  message("DONE!")
-  return(x)
+
+    message("DONE!")
   }
+
+  if (has_id == TRUE) {
+    x <- x %>%
+      bind_cols(ids) %>%
+        select(ID, everything())
+    }
+
+    return(x)
+
 }

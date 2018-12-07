@@ -29,7 +29,8 @@
 #' @author "Dallin Webb <dallinwebb@@byui.edu>"
 #' @seealso \link[caret]{varImp}
 var_imp_overall <- function(models) {
-  if (class(models) != "list" | class(models[[1]]) != "train") {
+
+  if (!(class(models) %in% c("list","caretList")) | class(models[[1]]) != "train") {
     stop("models argument must be a list of models of class 'train'")
   }
 

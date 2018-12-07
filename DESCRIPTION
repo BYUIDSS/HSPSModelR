@@ -14,25 +14,26 @@ Maintainer: Dallin Webb <dallinwebb@byui.edu>
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
-Imports: dplyr,
-    ggplot2,
-    forcats,
-    magrittr,
-    purrr,
-    purrrlyr,
-    readr,
-    rlang,
-    rlist,
-    stringr,
-    tibble,
-    tidyr,
-    wrapr,
-    caret,
-    DMwR,
-    naniar,
+Imports: dplyr (>= 0.7.4),
+    ggplot2 (>= 2.2.1),
+    forcats (>= 0.3.0),
+    magrittr (>= 1.5),
+    purrr (>= 0.2.4),
+    purrrlyr (>= 0.0.3),
+    readr (>= 1.1.1),
+    rlang (>= 0.2.0),
+    rlist (>= 0.4.6.1),
+    stringr (>= 1.3.0),
+    tibble (>= 1.4.2),
+    tidyr (>= 0.8.0),
+    wrapr (>= 1.7.0),
+    caret (>= 6.0.81),
+    DMwR (>= 0.4.1),
+    naniar (>= 0.4.1),
+    caretEnsemble (>= 2.0.0),
     utils,
     stats
-Depends: R (>= 3.0.1)
+Depends: R (>= 3.1)
 License: GPL-2
 Suggests: knitr,
     rmarkdown,

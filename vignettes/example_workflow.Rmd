@@ -1,0 +1,131 @@
+---
+title: "BYUImachine Example Workflow"
+author: "Brad Borget, Spencer Cook, Chad Schaeffer, Nic Stover, Dallin Webb"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Overview
+
+**BYUImachine** is an R package that reduces the time it takes to fit and compare many machine learning models to a cognostic dataset. It is designed to give the user a quick snapshot of which classification algorithms perform well, as well as extract variable importance. This package works only for binary classification problems.
+
+<br>
+
+## Installation
+
+```{r message=FALSE, warning=FALSE}
+#devtools::install_github("BYUIDSS/BYUImachine")
+```
+
+
+<br>
+
+## Clean Data with `preprocess_data`
+
+The `preprocess_data` function's main purpose is to reduce unnessesary predictor columns using correlation and variance. It also has the ability to impute missing data and change the target class into either factor or binary. 
+
+```{r}
+library(caret)
+library(BYUImachine)
+library(tidyverse)
+
+data(dhfr)
+
+ncol(dhfr)
+
+dhfr_reduced <- preprocess_data(dhfr, target = "Y", reduce_cols = T)
+
+ncol(dhfr_reduced)
+```
+
+This function does not scale or perform any other major data tranformation. Such transformations should be specified while training as to be more easily reverted for interpretation purposes. For more options, see `caret`'s pre-processing functions [here](http://topepo.github.io/caret/pre-processing.html){target="_blank"}.
+
+<br>
+
+## Split data
+
+```{r}
+set.seed(1)
+index   <- caret::createDataPartition(dhfr_reduced$Y, p = .8, list = F)
+train_x <- dhfr_reduced %>% slice( index) %>% select(-Y)
+test_x  <- dhfr_reduced %>% slice(-index) %>% select(-Y)
+train_y <- dhfr_reduced %>% slice( index) %>% select( Y) %>% as_vector() %>% unname()
+test_y  <- dhfr_reduced %>% slice(-index) %>% select( Y) %>% as_vector() %>% unname()
+```
+
+
+<br>
+
+## Run multiple models with `run_models`
+
+This function takes considerable time to run as it trains 50 classification methods from the caret package. Many preprocessing and training parameters can be specified such as preprocess, folds, iterations, etc. Since caret includes a lot of information in each `train` object, this function implements a trimming method to retain just enough information to be able to predict.
+
+```{r}
+models_list <- run_models(train_x, train_y, trim_models = TRUE)
+```
+
+<br>
+
+## Compare model performance with `get_performance`
+
+This function extracts the performance measures from each model in a list.
+
+```{r}
+model_performance <- get_performance(list_of_models = models_list, 
+                                     pred           = test_x, 
+                                     target         = test_y)
+```
+
+Further exploration can be performed to view a specific measurement 
+
+```{r}
+model_performance %>% 
+  filter(measure == "F1")
+```
+
+
+<br>
+
+## Resume here
+
+**Make Predictions**
+
+```{r}
+ # get_common_predictions(x = models, test_data = test, factor = "Dropped", threshold = 0.90)
+```
+
+The get_common_predictions function takes a list of models and outputs a vector of rows whose desired outcomes were agreed upon by a prespecified ratio of models. Downloading the BYUImachine package and running optimal_models then get_common_predictions is the fastest way to get from raw data to quality results.
+
+<br>
+
+## Other options
+
+**View a table of model diagnostics**
+
+```{r}
+ # make_table(x = models, test_data = test, target_column = targets)
+```
+
+The make_table function takes a list of models and outputs a dataframe where each row represents a trained model (labeled by the training method) and each column is a diagnostic. The diagnostics are all those calculated in the caret::confusionMatrix function, which here is iterated through for several models and rebound into table format for maunal investigation and model selection.
+
+**Compile models from a directory**
+
+The above function is especially useful if one already has trained models. If several models are stored in the same directory, the make_list function can pull them into a single object in your R environment.
+
+```{r}
+ # make_list(x = file_path)
+```
+
+
+**Variable Importance**
+
+```{r}
+ # var_imp_overall(models)
+ # var_imp_raw(models)
+```
+
+The var_imp functions output tibbles where rows rank the individual contribution of features to final predictions. var_imp_overall ranks the most influential features from among the entire list of models, whereas var_imp_raw gives the most important variable in sequence from each model listed in the function.
