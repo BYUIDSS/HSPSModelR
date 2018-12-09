@@ -58,7 +58,9 @@ preprocess_data <- function(x,
     has_id <- TRUE
     message("ID column has been removed")
 
-  } else has_id <- FALSE
+  } else {
+    has_id <- FALSE
+    }
 
   if ((x %>% map(~ sum(is.infinite(.x)) > 0) %>% unlist() %>% sum()) > 0) {
 
