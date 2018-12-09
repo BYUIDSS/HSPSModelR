@@ -60,7 +60,7 @@ preprocess_data <- function(x,
 
   } else {
     has_id <- FALSE
-    }
+  }
 
   if ((x %>% map(~ sum(is.infinite(.x)) > 0) %>% unlist() %>% sum()) > 0) {
 

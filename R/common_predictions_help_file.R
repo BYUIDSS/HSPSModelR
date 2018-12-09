@@ -4,8 +4,9 @@
 #'
 #' @param x A list of models
 #' @param factor the specific target for which wou want to pull the strongest common predictions.
-#' @param test_data a df, the portion of data you are using to test your predictions.
+#' @param test_x a df, the portion of data you are using to test your predictions.
 #' @param threshold a value between 0 and 1. What ratio of columns do you need to agree your target factor?
+#' @param id_col identify your ID column. If there are no IDs, row numbers will be assigned before filtering out uncertain rows.
 #'
 #' @importFrom stringr str_replace_all str_detect
 #' @importFrom stats predict
@@ -17,14 +18,26 @@
 #'
 #' @return This function returns a \code{tibble}, a single column reporting the ratio of like predictions for dropped clients meeting the prediction threshold
 #'
-#' @author "Chad Schaeffer <sch12059@@byui.edu>"
+#' @author "Chad Schaeffer <sch12059@@byui.edu>",
 
 
-get_common_predictions <- function(x, test_data, factor, threshold) {
-  if (!is.data.frame(test_data) | !is_tibble(test_data)) {
+get_common_predictions <- function(x,
+                                   test_x,
+                                   factor,
+                                   threshold,
+                                   id_col = NULL) {
+
+  if (!is.data.frame(test_x) | !is_tibble(test_x)) {
     stop("test_data needs to be a data.frame or tibble")
   } else {
-    test <- test_data
+    test <- test_x
+  }
+
+  if (id_col = NULL) {
+    ID <- c(1:nrow(test)) %>% as.tibble()
+  } else {
+    ID <- test %>% select(id_col)
+    test <- test %>% select(-id_col)
   }
 
   make_predictions <- function(i) {
@@ -47,18 +60,24 @@ get_common_predictions <- function(x, test_data, factor, threshold) {
     }
   }
 
-  predictions_array <- map_dfc(x, make_predictions)
+  predictions_array <- map_dfc(models_list, make_predictions)
 
   if (threshold > 1 | threshold < 0) {
     stop("threshold must be an integer between 0 and 1")
   }
   else {
-    common_predictions <- predictions_array %>%
-      transmute(percent_common = (rowSums(predictions_array) / ncol(predictions_array))) %>%
-      filter(percent_common >= threshold)
+    ratios <- predictions_array %>%
+      mutate(percent_common = (rowSums(predictions_array) / ncol(predictions_array))) %>%
+      select(percent_common)
   }
+
+  common_predictions <- ratios %>%
+    bind_cols(ID) %>%
+    filter(percent_common >= threshold)
 
   return(common_predictions)
 }
+
+get_common_predictions(models_list, test_x, "Dropped", 1)
 
 

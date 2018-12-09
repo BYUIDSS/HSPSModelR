@@ -41,17 +41,17 @@
 #'
 #' @author "Chad Schaeffer <sch12059@@byui.edu>
 
-make_table <- function(x, test_data, target_column) {
+make_table <- function(x, test_x, test_y) {
 
   if (!is.list(x)) {
     stop("x needs to be a list of models")
   }
 
-  if (!is.data.frame(test_data) | !is_tibble(test_data)) {
-    stop("x needs to be a data.frame or tibble")
-  } else {
-    test <- test_data
-  }
+  #if (!is.data.frame(test_x) | !is_tibble(test_x)) {
+  #  stop("x needs to be a data.frame or tibble")
+  #} else {
+    test <- test_x
+  #}
 
   make_row <- function(i) {
     p <- predict(i, test)
@@ -60,7 +60,7 @@ make_table <- function(x, test_data, target_column) {
       stop("all models must be able to produce predictions using stats::predict()")
     }
 
-      t <- confusionMatrix(p, target_column)
+      t <- confusionMatrix(p, test_y)
 
       as.data.frame(t[4]) %>%
         rownames_to_column(var = "measure") %>%
