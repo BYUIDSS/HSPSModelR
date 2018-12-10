@@ -53,8 +53,8 @@ This function does not scale or perform any other major data tranformation. Such
 ```{r}
 set.seed(1)
 index   <- caret::createDataPartition(dhfr_reduced$Y, p = .8, list = F)
-train_x <- dhfr_reduced %>% slice( index) %>% select(-Y) %>% as_tibble()
-test_x  <- dhfr_reduced %>% slice(-index) %>% select(-Y) %>% as_tibble()
+train_x <- dhfr_reduced %>% slice( index) %>% select(-Y)
+test_x  <- dhfr_reduced %>% slice(-index) %>% select(-Y)
 train_y <- dhfr_reduced %>% dplyr::slice( index) %>% dplyr::select( Y) %>% as_vector() %>% unname()
 test_y  <- dhfr_reduced %>% dplyr::slice(-index) %>% dplyr::select(Y) %>% as_vector() %>% unname()
 ```
@@ -67,7 +67,7 @@ test_y  <- dhfr_reduced %>% dplyr::slice(-index) %>% dplyr::select(Y) %>% as_vec
 This function takes considerable time to run as it trains 50 classification methods from the caret package. Many preprocessing and training parameters can be specified such as preprocess, folds, iterations, etc. Since caret includes a lot of information in each `train` object, this function implements a trimming method to retain just enough information to be able to predict.
 
 ```{r include=FALSE}
-models_list <- run_models(train_x, train_y, trim_models = TRUE)
+models_list <- run_models(train_x, train_y, trim_models = TRUE, light = T)
 ```
 
 <br>

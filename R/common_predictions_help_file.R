@@ -40,27 +40,30 @@ get_common_predictions <- function(x,
     test <- test %>% select(-id_col)
   }
 
-  make_predictions <- function(i) {
-    p <- predict(i, test, type = "raw")
+  ## Testing space, can we do below in a few maps?
+  models_list %>% map(predict, test)
+  predictions_array <- predict(models_list, newdata = test)
+  ##
 
-    if (!is.factor(p)) {
-      stop("all models must be able to produce predictions using stats::predict()")
-    }
-
-    # Try if (is.factor(p[[1]]) Also, isn't this repeditive since it's like what you just did in live 46-48?
-    if (str_detect(str_c(p, collapse = "|"), factor) == FALSE) {
-      stop("factor must be in the target column you used to train your models")
-    } else {
-      p %>%
-        as.factor() %>% # Not needed if p is already tested for factor
-        as_tibble() %>%
-        transmute(new = case_when(
-          value %in% factor ~ 1, # == will do fine instead of %in% since 'factor' has only one value
-          TRUE ~ 0
-        # Do we need to gather these results? Maybe find a way to bind model names as well?
-        ))
-    }
-  }
+  # make_predictions <- function(i) {
+  #   p <- predict(i, test)
+  #
+  #   if ( !is.factor(p[[1]]) ) {
+  #     stop("all models must be able to produce predictions using stats::predict()")
+  #   }
+  #
+  #
+  #   if (str_detect(str_c(p[[1]], collapse = "|"), factor) == FALSE) {
+  #     stop("factor must be in the target column you used to train your models")
+  #   } else {
+  #     p %>%
+  #       as_tibble() %>%
+  #       transmute(new = case_when(
+  #         value == factor ~ 1,
+  #         TRUE ~ 0
+  #         ))
+  #   }
+  # }
 
   predictions_array <- map_dfc(models_list, make_predictions)
 

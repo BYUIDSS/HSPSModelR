@@ -9,7 +9,7 @@
 #' @author "Chad Schaeffer <sch12059@@byui.edu>"
 
 install_train_packages <- function() {
-  p_load("mda", "ipred", "wsrf", "ada", "kernlab", "arm", "rpart", "MASS", "partDSA"
+  p_load("mda", "ipred", "wsrf", "ada", "kernlab", "arm", "rpart", "MASS", "partDSA",
          "mda", "bnclassify", "e1071", "ranger", "spls", "binda", "mboost", "RSNNS",
          "klaR", "MASS", "plsRglm", "sparseLDA", "evtree", "randomForest", "naivebayes",
          "C50", "party", "hda", "ordinalNet", "rotationForest", "bst", "nodeHarvest",
