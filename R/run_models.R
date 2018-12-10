@@ -18,7 +18,8 @@
 #'
 #' @author "Dallin Webb <dallinwebb@@byui.edu>"
 #' @seealso \link[caretEnsemble]{caretList}
-run_models <- function(train_x, train_y, seed = 1, num_folds = 2, trim_models = TRUE) {
+run_models <- function(train_x, train_y, seed = 1, num_folds = 2,
+                       trim_models = TRUE, light = FALSE) {
   folds_index <- caret::createFolds(train_y, k = num_folds)
   myControl <- caret::trainControl(
     method = "cv",
@@ -31,7 +32,9 @@ run_models <- function(train_x, train_y, seed = 1, num_folds = 2, trim_models = 
     index = folds_index,
     summaryFunction = twoClassSummary)
 
-  methods <- c("pda"                , "plsRglm"             ,"polr"                ,"sdwd"               ,
+  if (light) methods <- c("pda","polr","sdwd","slda")
+  else {
+      methods <- c("pda"                , "plsRglm"             ,"polr"                ,"sdwd"               ,
                "slda"               , "sparseLDA"           ,"svmLinearWeights"    ,"svmRadialCost"      ,
                "wsrf"               , "evtree"              ,"fda"                 ,"gamSpline"          ,
                "knn"                , "lda"                 ,"msaenet"             ,"null"               ,
@@ -49,6 +52,9 @@ run_models <- function(train_x, train_y, seed = 1, num_folds = 2, trim_models = 
                "glmboost"           , "nodeHarvest"         ,"partDSA"             ,"protoclass"         ,
                "mlpWeightDecay"     , "rfRules"             ,"rocc"                ,"rotationForestCp"   ,
                "stepQDA"            , "svmLinear2"          ,"svmPoly"             ,"svmRadialWeights")
+  }
+
+
 
 
   set.seed(seed)
