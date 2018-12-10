@@ -31,11 +31,25 @@ run_models <- function(train_x, train_y, seed = 1, num_folds = 2, trim_models = 
     index = folds_index,
     summaryFunction = twoClassSummary)
 
-  methods <- c("parRF",
-               "xgbLinear",
-               "svmLinearWeights2",
-               "extraTrees",
-               "naive_bayes")
+  methods <- c("pda"                , "pslRglm"             ,"polr"                ,"sdwd"               ,
+               "slda"               , "sparseLDA"           ,"svmLinearWeights"    ,"svmRadialCost"      ,
+               "wsrf"               , "evtree"              ,"fda"                 ,"gamSpline"          ,
+               "knn"                , "lda"                 ,"msaenet"             ,"null"               ,
+               "glm"                , "rf"                  ,"glmnet"              ,"lda"                ,
+               "ada"                , "naive_bayes"         ,"knn"                 ,"lvq"                ,
+               "svmLinear"          , "treebag"             ,"bagFDA"              ,"bagEarth"           ,
+               "bayesglm"           , "glmboost"            ,"C5.0"                ,"rpart1SE"           ,
+               "rpart2"             , "cforest"             ,"ctree2"              ,"gcvEarth"           ,
+               "glmStepAIC"         , "hda"                 ,"hdda"                ,"lda2"               ,
+               "mda"                , "mlpWeightDecayML"    ,"monmlp"              ,"nb"                 ,
+               "nbSearch"           , "ordinalNet"          ,"plr"                 ,"pls"                ,
+               "ranger"             , "rotationForest"      ,"rpartScore"          ,"sda"                ,
+               "spls"               , "svmBoundrangeString" ,"svmLinear3"          ,"xgbDART"            ,
+               "binda"              , "bstSm"               ,"dwdLinear"           ,"earth"              ,
+               "glmboost"           , "nodeHarvest"         ,"partDSA"             ,"protoclass"         ,
+               "mlpWeightDecay"     , "rfRules"             ,"rocc"                ,"rotationForestCp"   ,
+               "stepQDA"            , "svmLinear2"          ,"svmPoly"             ,"svmRadialWeig")
+
 
   set.seed(seed)
   model_list <- caretEnsemble::caretList(
