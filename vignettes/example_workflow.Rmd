@@ -53,10 +53,10 @@ This function does not scale or perform any other major data tranformation. Such
 ```{r}
 set.seed(1)
 index   <- caret::createDataPartition(dhfr_reduced$Y, p = .8, list = F)
-train_x <- dhfr_reduced %>% slice( index) %>% select(-Y)
-test_x  <- dhfr_reduced %>% slice(-index) %>% select(-Y) %>% as.tibble()
-train_y <- dhfr_reduced %>% slice( index) %>% select( Y) %>% as_vector() %>% unname()
-test_y  <- dhfr_reduced %>% slice(-index) %>% select( Y) %>% as_vector() %>% unname() %>% as.tibble()
+train_x <- dhfr_reduced %>% slice( index) %>% select(-Y) %>% as_tibble()
+test_x  <- dhfr_reduced %>% slice(-index) %>% select(-Y) %>% as_tibble()
+train_y <- dhfr_reduced %>% dplyr::slice( index) %>% dplyr::select( Y) %>% as_vector() %>% unname()
+test_y  <- dhfr_reduced %>% dplyr::slice(-index) %>% dplyr::select(Y) %>% as_vector() %>% unname()
 ```
 
 
@@ -67,7 +67,7 @@ test_y  <- dhfr_reduced %>% slice(-index) %>% select( Y) %>% as_vector() %>% unn
 This function takes considerable time to run as it trains 50 classification methods from the caret package. Many preprocessing and training parameters can be specified such as preprocess, folds, iterations, etc. Since caret includes a lot of information in each `train` object, this function implements a trimming method to retain just enough information to be able to predict.
 
 ```{r include=FALSE}
-models_list <- BYUImachine::run_models(train_x, train_y, trim_models = TRUE)
+models_list <- run_models(train_x, train_y, trim_models = TRUE)
 ```
 
 <br>
@@ -99,6 +99,7 @@ model_performance %>%
 **Make Predictions**
 
 ```{r}
+# This example dataset doesn't have an ID column
 get_common_predictions(models_list, test_x, test_y, threshold = 0.90, id_col)
 ```
 
@@ -131,8 +132,9 @@ make_list(file_path)
 The `var_imp_*` functions output tibbles where rows rank the individual contribution of features to final predictions. `var_imp_overall` ranks the most influential features from among the entire list of models, whereas `var_imp_raw` gives the most important variable in sequence from each model listed in the function.
 
 ```{r}
- var_imp_overall(models_list)
- var_imp_raw(models_list)
+var_imp_overall(models_list)
+ 
+var_imp_raw(models_list)
 ```
 
 `gg_var_imp()` is available to quickly visualize these variables, allowing you to specify the top number of ranked variables with the `top_num` argument.

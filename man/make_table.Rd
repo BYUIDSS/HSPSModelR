@@ -4,7 +4,7 @@
 \alias{make_table}
 \title{Make a machine learning diagnostics table}
 \usage{
-make_table(x, test_data, target_column)
+make_table(x, test_x, test_y)
 }
 \arguments{
 \item{x}{A list of models}

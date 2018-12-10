@@ -66,6 +66,7 @@ var_imp_raw <- function(models) {
 
   imp <- imp_vars %>%
     map(1) %>%
+    map(function(x) if (is.matrix(x)) x <- as.data.frame(x) else x <- x) %>%
     map(rownames_to_column) %>%
     map(~ arrange(., desc(Overall))) %>%
     map(~ mutate(., Overall = round(Overall, 2),

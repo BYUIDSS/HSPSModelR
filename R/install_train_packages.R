@@ -9,11 +9,11 @@
 #' @author "Chad Schaeffer <sch12059@@byui.edu>"
 
 install_train_packages <- function() {
-  p_load("mda", "ipred", "wsrf", "lvq", "glmStepAIC", "ada", "kernlab", "arm", "rpart", "MASS",
+  p_load("mda", "ipred", "wsrf", "ada", "kernlab", "arm", "rpart", "MASS", "partDSA"
          "mda", "bnclassify", "e1071", "ranger", "spls", "binda", "mboost", "RSNNS",
          "klaR", "MASS", "plsRglm", "sparseLDA", "evtree", "randomForest", "naivebayes",
          "C50", "party", "hda", "ordinalNet", "rotationForest", "bst", "nodeHarvest",
          "inTrees", "earth", "msaenet", "glmnet", "Matrix", "class", "HDclassif", "monmlp",
-         "stepPLR", "rpartScore", "LiblineaR", "kerndwd", "protoclass", "proxy", "rocc",
-         "sdwd", "gam", "pls", "sda", "xgboost", "rotationforest")
+         "stepPlr", "rpartScore", "LiblineaR", "kerndwd", "protoclass", "proxy", "rocc",
+         "sdwd", "gam", "pls", "sda", "xgboost", "rotationForest")
 }

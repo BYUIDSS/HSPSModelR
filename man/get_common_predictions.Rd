@@ -4,16 +4,18 @@
 \alias{get_common_predictions}
 \title{Find at risk customers}
 \usage{
-get_common_predictions(x, test_data, factor, threshold)
+get_common_predictions(x, test_x, factor, threshold, id_col = NULL)
 }
 \arguments{
 \item{x}{A list of models}
 
-\item{test_data}{a df, the portion of data you are using to test your predictions.}
+\item{test_x}{a df, the portion of data you are using to test your predictions.}
 
 \item{factor}{the specific target for which wou want to pull the strongest common predictions.}
 
 \item{threshold}{a value between 0 and 1. What ratio of columns do you need to agree your target factor?}
+
+\item{id_col}{identify your ID column. If there are no IDs, row numbers will be assigned before filtering out uncertain rows.}
 }
 \value{
 This function returns a \code{tibble}, a single column reporting the ratio of like predictions for dropped clients meeting the prediction threshold
@@ -22,5 +24,5 @@ This function returns a \code{tibble}, a single column reporting the ratio of li
 Makes predictions using a list of models and returns a vector where each value represents the ratio of models which agree on a specified classification for that observation.
 }
 \author{
-"Chad Schaeffer <sch12059@byui.edu>"
+"Chad Schaeffer <sch12059@byui.edu>",
 }

@@ -33,7 +33,7 @@ get_common_predictions <- function(x,
     test <- test_x
   }
 
-  if (id_col = NULL) {
+  if (is.null(id_col)) {
     ID <- c(1:nrow(test)) %>% as.tibble()
   } else {
     ID <- test %>% select(id_col)
@@ -47,15 +47,17 @@ get_common_predictions <- function(x,
       stop("all models must be able to produce predictions using stats::predict()")
     }
 
+    # Try if (is.factor(p[[1]]) Also, isn't this repeditive since it's like what you just did in live 46-48?
     if (str_detect(str_c(p, collapse = "|"), factor) == FALSE) {
       stop("factor must be in the target column you used to train your models")
     } else {
       p %>%
-        as.factor() %>%
+        as.factor() %>% # Not needed if p is already tested for factor
         as_tibble() %>%
         transmute(new = case_when(
-          value %in% factor ~ 1,
+          value %in% factor ~ 1, # == will do fine instead of %in% since 'factor' has only one value
           TRUE ~ 0
+        # Do we need to gather these results? Maybe find a way to bind model names as well?
         ))
     }
   }
@@ -68,7 +70,7 @@ get_common_predictions <- function(x,
   else {
     ratios <- predictions_array %>%
       mutate(percent_common = (rowSums(predictions_array) / ncol(predictions_array))) %>%
-      select(percent_common)
+      dplyr::select(percent_common)
   }
 
   common_predictions <- ratios %>%
@@ -78,6 +80,6 @@ get_common_predictions <- function(x,
   return(common_predictions)
 }
 
-get_common_predictions(models_list, test_x, "Dropped", 1)
+#get_common_predictions(models_list, test_x, "Dropped", 1)
 
 
