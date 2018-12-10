@@ -2,13 +2,13 @@
 #'
 #' Generates a tibble with features optimized for machine learning
 #'
-#' This is the details section
+#' This function will .... reguardless of inputs
 #'
 #' @param x data frame or tibble.
 #' @param target classifier column
-#' @param reduce_cols TRUE = Columns are reduced based on near zero variance and correlation; FALSE = Nothing
-#' @param factor_y FALSE = Recodes pred to 0 and 1; TRUE = Recodes pred to factor
-#' @param impute Impute NA by "knn","mean","zero"
+#' @param reduce_cols lgl `TRUE`: Columns are reduced based on near zero variance and correlation; FALSE = Nothing
+#' @param factor_y `FALSE`: Recodes pred to 0 and 1; TRUE = Recodes pred to factor
+#' @param impute character Impute NA by "knn","mean","zero"
 #' @param corr_cutoff Corelation coefficient level to cut off highly correlated columns, devaulted to .90
 #' @param freq_cut the cutoff for the ratio of the most common value to the second most common value
 #' @param unique_cut the cutoff for the percentage of distinct values out of the number of total samples

@@ -55,7 +55,7 @@ set.seed(1)
 index   <- caret::createDataPartition(dhfr_reduced$Y, p = .8, list = F)
 train_x <- dhfr_reduced %>% slice( index) %>% select(-Y)
 test_x  <- dhfr_reduced %>% slice(-index) %>% select(-Y)
-train_y <- dhfr_reduced %>% dplyr::slice( index) %>% dplyr::select( Y) %>% as_vector() %>% unname()
+train_y <- dhfr_reduced %>% dplyr::slice( index) %>% dplyr::select(Y) %>% as_vector() %>% unname()
 test_y  <- dhfr_reduced %>% dplyr::slice(-index) %>% dplyr::select(Y) %>% as_vector() %>% unname()
 ```
 
@@ -67,7 +67,7 @@ test_y  <- dhfr_reduced %>% dplyr::slice(-index) %>% dplyr::select(Y) %>% as_vec
 This function takes considerable time to run as it trains 50 classification methods from the caret package. Many preprocessing and training parameters can be specified such as preprocess, folds, iterations, etc. Since caret includes a lot of information in each `train` object, this function implements a trimming method to retain just enough information to be able to predict.
 
 ```{r include=FALSE}
-models_list <- run_models(train_x, train_y, trim_models = TRUE, light = T)
+models_list <- run_models(train_x, train_y, trim_models = TRUE, light = TRUE)
 ```
 
 <br>
@@ -78,8 +78,8 @@ This function extracts the performance measures from each model in a list.
 
 ```{r}
 model_performance <- get_performance(list_of_models = models_list,
-                                                  pred           = test_x,
-                                                  target         = test_y)
+                                     pred           = test_x,
+                                     target         = test_y)
 
 model_performance
 ```
@@ -91,16 +91,15 @@ model_performance %>%
   filter(measure == "F1")
 ```
 
+The F1 score is ..
 
 <br>
-
-## Resume here
 
 **Make Predictions**
 
 ```{r}
 # This example dataset doesn't have an ID column
-get_common_predictions(models_list, test_x, test_y, threshold = 0.90, id_col)
+get_common_predictions(models_list, test_x, test_y, threshold = 0.70)
 ```
 
 The get_common_predictions function takes a list of models and outputs a vector of rows whose desired outcomes were agreed upon by a prespecified ratio of models. Downloading the BYUImachine package and using run_models() then get_common_predictions() is the fastest way to get from raw data to quality results.
@@ -112,7 +111,7 @@ The get_common_predictions function takes a list of models and outputs a vector 
 **View a table of model diagnostics**
 
 ```{r}
-make_table(models_list, test_x, factor)
+make_table(models_list, test_x, test_y)
 ```
 
 The make_table function takes a list of models and outputs a dataframe where each row represents a trained model (labeled by the training method) and each column is a diagnostic. The diagnostics are all those calculated in the caret::confusionMatrix() function, which here is iterated through for several models and rebound into table format for maunal investigation and model selection.
@@ -122,7 +121,7 @@ The make_table function takes a list of models and outputs a dataframe where eac
 The above function is especially useful if one already has trained models. If several models are stored in the same directory, the make_list function can pull them into a single object in your R environment.
 
 ```{r}
-make_list(file_path)
+#make_list(file_path)
 ```
 
 <br>
@@ -145,4 +144,6 @@ vars <- var_imp_overall(models_list)
 gg_var_imp(vars, top_num = 20)
 ```
 
+
+## Trelliscope
 

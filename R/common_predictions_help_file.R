@@ -27,62 +27,33 @@ get_common_predictions <- function(x,
                                    threshold,
                                    id_col = NULL) {
 
-  if (!is.data.frame(test_x) | !is_tibble(test_x)) {
+  if (!is.data.frame(test_x)) {
     stop("test_data needs to be a data.frame or tibble")
-  } else {
-    test <- test_x
-  }
+
+  } else test <- test_x
+
 
   if (is.null(id_col)) {
-    ID <- c(1:nrow(test)) %>% as.tibble()
+    ID <- c(1:nrow(test)) %>% as_tibble()
+    names(ID) <- "ID"
+
   } else {
-    ID <- test %>% select(id_col)
+    ID   <- test %>% select(id_col)
     test <- test %>% select(-id_col)
   }
 
-  ## Testing space, can we do below in a few maps?
-  models_list %>% map(predict, test)
-  predictions_array <- predict(models_list, newdata = test)
-  ##
-
-  # make_predictions <- function(i) {
-  #   p <- predict(i, test)
-  #
-  #   if ( !is.factor(p[[1]]) ) {
-  #     stop("all models must be able to produce predictions using stats::predict()")
-  #   }
-  #
-  #
-  #   if (str_detect(str_c(p[[1]], collapse = "|"), factor) == FALSE) {
-  #     stop("factor must be in the target column you used to train your models")
-  #   } else {
-  #     p %>%
-  #       as_tibble() %>%
-  #       transmute(new = case_when(
-  #         value == factor ~ 1,
-  #         TRUE ~ 0
-  #         ))
-  #   }
-  # }
-
-  predictions_array <- map_dfc(models_list, make_predictions)
 
   if (threshold > 1 | threshold < 0) {
     stop("threshold must be an integer between 0 and 1")
   }
-  else {
-    ratios <- predictions_array %>%
-      mutate(percent_common = (rowSums(predictions_array) / ncol(predictions_array))) %>%
-      dplyr::select(percent_common)
-  }
 
-  common_predictions <- ratios %>%
+
+  predictions_array <- caretEnsemble:::predict.caretList(x, newdata = test) %>% as_tibble()
+  result <- predictions_array %>%
+    mutate(agreeance = (rowSums(predictions_array) / ncol(predictions_array))) %>%
     bind_cols(ID) %>%
-    filter(percent_common >= threshold)
+    select(ID, agreeance, everything()) %>%
+    filter(agreeance >= threshold)
 
-  return(common_predictions)
+  return(result)
 }
-
-#get_common_predictions(models_list, test_x, "Dropped", 1)
-
-
