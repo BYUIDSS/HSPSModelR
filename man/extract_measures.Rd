@@ -4,10 +4,14 @@
 \alias{extract_measures}
 \title{Extract measures from list of models}
 \usage{
-extract_measures(models)
+extract_measures(models, test_x, test_y)
 }
 \arguments{
 \item{models}{List of models of class \code{train}}
+
+\item{test_x}{`data.frame` or `tibble`. explanitory variables}
+
+\item{test_y}{`vector` target variable}
 }
 \value{
 This function returns a \code{tibble} of measures by model

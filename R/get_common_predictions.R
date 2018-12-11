@@ -2,9 +2,8 @@
 #'
 #' Makes predictions using a list of models and returns a vector where each value represents the ratio of models which agree on a specified classification for that observation.
 #'
-#' @param x A list of models
-#' @param factor the specific target for which wou want to pull the strongest common predictions.
-#' @param test_x a df, the portion of data you are using to test your predictions.
+#' @param models A list of models of class `train`
+#' @param test_x `data.frame` or `tibble`. explanitory variables from the test set
 #' @param threshold a value between 0 and 1. What ratio of columns do you need to agree your target factor?
 #' @param id_col identify your ID column. If there are no IDs, row numbers will be assigned before filtering out uncertain rows.
 #'
@@ -19,11 +18,8 @@
 #' @return This function returns a \code{tibble}, a single column reporting the ratio of like predictions for dropped clients meeting the prediction threshold
 #'
 #' @author "Chad Schaeffer <sch12059@@byui.edu>",
-
-
-get_common_predictions <- function(x,
+get_common_predictions <- function(models,
                                    test_x,
-                                   factor,
                                    threshold,
                                    id_col = NULL) {
 
@@ -48,12 +44,16 @@ get_common_predictions <- function(x,
   }
 
 
-  predictions_array <- caretEnsemble:::predict.caretList(x, newdata = test) %>% as_tibble()
+  predictions_array <-
+    caretEnsemble:::predict.caretList(models, newdata = test) %>%
+    as_tibble()
+
   result <- predictions_array %>%
     mutate(agreeance = (rowSums(predictions_array) / ncol(predictions_array))) %>%
     bind_cols(ID) %>%
     select(ID, agreeance, everything()) %>%
-    filter(agreeance >= threshold)
+    filter(agreeance >= threshold) %>%
+    arrange(desc(agreeance))
 
   return(result)
 }

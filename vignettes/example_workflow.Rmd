@@ -17,14 +17,19 @@ vignette: >
 
 ## Installation
 
-```{r message=FALSE, warning=FALSE}
-#devtools::install_github("BYUIDSS/BYUImachine")
-library(caret)
-library(dplyr)
-library(purrr)
-library(BYUImachine)
+```{r eval = FALSE}
+# install.packages("devtools")
+
+devtools::install_github("BYUIDSS/BYUImachine")
 ```
 
+```{r message=FALSE, warning=FALSE}
+# install.packages(c("caret","tidyverse"))
+
+library(caret)
+library(tidyverse)
+library(BYUImachine)
+```
 
 <br>
 
@@ -53,10 +58,10 @@ This function does not scale or perform any other major data tranformation. Such
 ```{r}
 set.seed(1)
 index   <- caret::createDataPartition(dhfr_reduced$Y, p = .8, list = F)
-train_x <- dhfr_reduced %>% slice( index) %>% select(-Y)
-test_x  <- dhfr_reduced %>% slice(-index) %>% select(-Y)
-train_y <- dhfr_reduced %>% dplyr::slice( index) %>% dplyr::select(Y) %>% as_vector() %>% unname()
-test_y  <- dhfr_reduced %>% dplyr::slice(-index) %>% dplyr::select(Y) %>% as_vector() %>% unname()
+train_x <- dhfr_reduced[ index, 1:111]
+test_x  <- dhfr_reduced[-index, 1:111]
+train_y <- dhfr_reduced[ index, "Y"]
+test_y  <- dhfr_reduced[-index, "Y"]
 ```
 
 
@@ -67,74 +72,71 @@ test_y  <- dhfr_reduced %>% dplyr::slice(-index) %>% dplyr::select(Y) %>% as_vec
 This function takes considerable time to run as it trains 50 classification methods from the caret package. Many preprocessing and training parameters can be specified such as preprocess, folds, iterations, etc. Since caret includes a lot of information in each `train` object, this function implements a trimming method to retain just enough information to be able to predict.
 
 ```{r include=FALSE}
-models_list <- run_models(train_x, train_y, trim_models = TRUE, light = TRUE)
+models_list <- run_models(train_x     = train_x, 
+                          train_y     = train_y, 
+                          seed        = 1, 
+                          num_folds   = 2, 
+                          trim_models = TRUE, 
+                          light       = TRUE)
 ```
 
 <br>
 
 ## Compare model performance with `get_performance`
 
-This function extracts the performance measures from each model in a list.
+The make_table function takes a list of models and outputs a dataframe where each row represents a trained model (labeled by the training method) and each column is a diagnostic. The diagnostics are all those calculated in the caret::confusionMatrix() function, which here is iterated through for several models and rebound into table format for maunal investigation and model selection.
 
 ```{r}
-model_performance <- get_performance(list_of_models = models_list,
-                                     pred           = test_x,
-                                     target         = test_y)
+make_table(models = models_list,
+           test_x = test_x,
+           test_y = test_y)
+```
+
+However, if you would like the same information in long format, use the `get_performance()` function with the same inputs.
+
+```{r}
+model_performance <- get_performance(models_list, test_x, test_y)
 
 model_performance
 ```
 
-Further exploration can be performed to view a specific measurement 
+Further exploration can be performed to view a specific measurement such as the F1 measure. F1 is a measure of a test's accuracy that weights the average of precision and recall.
 
 ```{r}
 model_performance %>%
   filter(measure == "F1")
 ```
 
-The F1 score is ..
-
 <br>
 
 **Make Predictions**
 
 ```{r}
-# This example dataset doesn't have an ID column
-get_common_predictions(models_list, test_x, test_y, threshold = 0.70)
+get_common_predictions(models    = models_list, 
+                       test_x    = test_x, 
+                       threshold = 0.70)
 ```
 
 The get_common_predictions function takes a list of models and outputs a vector of rows whose desired outcomes were agreed upon by a prespecified ratio of models. Downloading the BYUImachine package and using run_models() then get_common_predictions() is the fastest way to get from raw data to quality results.
 
 <br>
 
-## Other options
 
-**View a table of model diagnostics**
-
-```{r}
-make_table(models_list, test_x, test_y)
-```
-
-The make_table function takes a list of models and outputs a dataframe where each row represents a trained model (labeled by the training method) and each column is a diagnostic. The diagnostics are all those calculated in the caret::confusionMatrix() function, which here is iterated through for several models and rebound into table format for maunal investigation and model selection.
-
-**Compile models from a directory**
-
-The above function is especially useful if one already has trained models. If several models are stored in the same directory, the make_list function can pull them into a single object in your R environment.
-
-```{r}
-#make_list(file_path)
-```
-
-<br>
 
 ## Extract variable importance with `var_imp_*()`
 
 The `var_imp_*` functions output tibbles where rows rank the individual contribution of features to final predictions. `var_imp_overall` ranks the most influential features from among the entire list of models, whereas `var_imp_raw` gives the most important variable in sequence from each model listed in the function.
 
 ```{r}
-var_imp_overall(models_list)
+suppressMessages( var_imp_overall(models_list) ) 
  
-var_imp_raw(models_list)
+suppressMessages( var_imp_raw(models_list) )
+
 ```
+
+<br>
+
+## Visualize variable importance with `gg_var_imp()`
 
 `gg_var_imp()` is available to quickly visualize these variables, allowing you to specify the top number of ranked variables with the `top_num` argument.
 
@@ -144,6 +146,14 @@ vars <- var_imp_overall(models_list)
 gg_var_imp(vars, top_num = 20)
 ```
 
+<br>
 
-## Trelliscope
+## Compile models from a directory
 
+The functions above are especially useful if one already has trained models. If several models are stored in the same directory, the make_list function can pull them into a single object in your R environment.
+
+```{r eval = FALSE}
+make_list(file_path)
+```
+
+<br>

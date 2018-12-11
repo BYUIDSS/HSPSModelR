@@ -4,12 +4,12 @@ Title: Machine Learning Model Selection of Cognostic Data
 Description: Produce a robust prediction model using machine learning to predict attrition of eClaims customers.
     Also contains comprehensive evaluation framework around those models.
 Version: 0.0.0.9000
-Author: c(person("Dallin","Webb",       email = "dallinwebb@byui.edu", role = c("aut","cre")),
+Author: c(person("Brad","Borget",       email = "bor13001@byui.edu",   role = "aut"),
+          person("Spencer","Cook",      email = "coo12038@byui.edu",   role = "aut"),
+          person("Trenton","Pulsipher", email = "trenton.pulsipher@henryschein.com", role = "cph"))
           person("Chad","Schaeffer",    email = "sch12059@byui.edu",   role = "aut"),
           person("Nic","Stover",        email = "sto15064@byui.edu",   role = "aut"),
-          person("Spencer","Cook",      email = "coo12038@byui.edu",   role = "aut"),
-          person("Brad","Borget",       email = "bor13001@byui.edu",   role = "aut"),
-          person("Trenton","Pulsipher", email = "trenton.pulsipher@henryschein.com", role = "cph"))
+          person("Dallin","Webb",       email = "dallinwebb@byui.edu", role = "aut"),
 Maintainer: Dallin Webb <dallinwebb@byui.edu>
 Encoding: UTF-8
 LazyData: true
@@ -31,6 +31,8 @@ Imports: dplyr (>= 0.7.4),
     DMwR (>= 0.4.1),
     naniar (>= 0.4.1),
     caretEnsemble (>= 2.0.0),
+    pacman (>= 0.5.0),
+    tidyverse,
     utils,
     stats
 Depends: R (>= 3.1)

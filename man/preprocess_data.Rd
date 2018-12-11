@@ -13,11 +13,11 @@ preprocess_data(x, target = "Truth", reduce_cols = FALSE,
 
 \item{target}{classifier column}
 
-\item{reduce_cols}{TRUE = Columns are reduced based on near zero variance and correlation; FALSE = Nothing}
+\item{reduce_cols}{lgl `TRUE`: Columns are reduced based on near zero variance and correlation; FALSE = Nothing}
 
-\item{factor_y}{FALSE = Recodes pred to 0 and 1; TRUE = Recodes pred to factor}
+\item{factor_y}{`FALSE`: Recodes pred to 0 and 1; TRUE = Recodes pred to factor}
 
-\item{impute}{Impute NA by "knn","mean","zero"}
+\item{impute}{character Impute NA by "knn","mean","zero"}
 
 \item{corr_cutoff}{Corelation coefficient level to cut off highly correlated columns, devaulted to .90}
 
@@ -35,7 +35,7 @@ This function returns a \code{tibble} of optimized features
 Generates a tibble with features optimized for machine learning
 }
 \details{
-This is the details section
+This function will .... reguardless of inputs
 }
 \seealso{
 \link[caret]{preProcess}

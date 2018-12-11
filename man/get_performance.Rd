@@ -4,14 +4,14 @@
 \alias{get_performance}
 \title{Extract model performance}
 \usage{
-get_performance(list_of_models, pred = test_x, target = test_y)
+get_performance(models, test_x, test_y)
 }
 \arguments{
-\item{list_of_models}{List of models of class \code{train}}
+\item{models}{List of models of class \code{train}}
 
-\item{pred}{data.frame or tibble of predictor variables}
+\item{test_x}{`data.frame` or `tibble` of explanitory variables}
 
-\item{target}{vector of target variable}
+\item{test_y}{vector of target variable}
 }
 \value{
 This function returns a \code{tibble} of model performance including columns:

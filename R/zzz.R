@@ -20,6 +20,7 @@ globalVariables(
     "test_y",
     "score",
     "method",
-    "twoClassSummary"
+    "twoClassSummary",
+    "agreeance"
     )
   )

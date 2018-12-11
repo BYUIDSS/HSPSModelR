@@ -5,7 +5,7 @@
 \title{Run many models on train data}
 \usage{
 run_models(train_x, train_y, seed = 1, num_folds = 2,
-  trim_models = TRUE)
+  trim_models = TRUE, light = FALSE)
 }
 \arguments{
 \item{train_x}{data.frame or tibble of predictor variables}
@@ -17,6 +17,9 @@ run_models(train_x, train_y, seed = 1, num_folds = 2,
 \item{num_folds}{Integer. Number of folds.}
 
 \item{trim_models}{Logical. If TRUE, excess will be omited from models}
+
+\item{light}{`logical.` FALSE data will train on only 5 algorithms. if TRUE
+(default), data will train on all 68 models}
 }
 \value{
 This function returns a \code{list} of trained models:

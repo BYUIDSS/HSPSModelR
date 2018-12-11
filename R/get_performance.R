@@ -4,9 +4,9 @@
 #'
 #' This is the details section
 #'
-#' @param list_of_models List of models of class \code{train}
-#' @param pred data.frame or tibble of predictor variables
-#' @param target vector of target variable
+#' @param models List of models of class \code{train}
+#' @param test_x `data.frame` or `tibble` of explanitory variables
+#' @param test_y vector of target variable
 #'
 #' @importFrom dplyr arrange desc select
 #' @importFrom purrr map_dfr
@@ -26,21 +26,15 @@
 #'
 #' @author "Dallin Webb <dallinwebb@@byui.edu>"
 #' @seealso \link[BYUImachine]{extract_measures}
-get_performance <- function(list_of_models,
-                            #measure = "Accuracy",
-                            pred    = test_x,
-                            target  = test_y) {
+get_performance <- function(models, test_x, test_y) {
 
-  #measure_sym <- rlang::sym(measure)
-
-  if (!is.list(list_of_models)) {
+  if (!is.list(models)) {
     stop("x needs to be a list of models")
   }
 
-  result <- map_dfr(list_of_models, extract_measures) %>%
+  result <- map_dfr(models, extract_measures, test_x, test_y) %>%
     arrange(measure, desc(score)) %>%
     select(method, measure, score)
 
   return(result)
-
 }

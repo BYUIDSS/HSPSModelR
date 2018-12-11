@@ -2,9 +2,9 @@
 #'
 #' Takes a list of trained machine learning models and returns diagnostics as a data frame as to compare the effectiveness of algorithms. Measures include Accuracy, Prevalence, Detection Rate, F1, Cohen's Kappa, McNemar P-Value, Negative and Positive Predictive value, Precision, Recall, Sensitivity, and Specificity
 #'
-#' @param x A list of models
-#' @param test_data portion of data you are using to test your predictions.
-#' @param target_column the true values which you are comparing to your predicted values.
+#' @param models A list of models of class `train`
+#' @param test_x `data.frame` or `tibble`. explanitory variables
+#' @param test_y `vector` target variable
 #'
 #' @importFrom caret confusionMatrix
 #' @importFrom dplyr select filter mutate rename_at bind_rows
@@ -40,21 +40,14 @@
 #' }
 #'
 #' @author "Chad Schaeffer <sch12059@@byui.edu>
+make_table <- function(models, test_x, test_y) {
 
-make_table <- function(x, test_x, test_y) {
-
-  if (!is.list(x)) {
+  if (!is.list(models)) {
     stop("x needs to be a list of models")
   }
 
-  #if (!is.data.frame(test_x) | !is_tibble(test_x)) {
-  #  stop("x needs to be a data.frame or tibble")
-  #} else {
-    test <- test_x
-  #}
-
   make_row <- function(i) {
-    p <- predict(i, test)
+    p <- predict(i, test_x)
 
     if (!is.factor(p)) {
       stop("all models must be able to produce predictions using stats::predict()")
@@ -72,5 +65,5 @@ make_table <- function(x, test_x, test_y) {
         spread(measure, name)
     }
 
-    return(map_dfr(x, make_row))
+    return(map_dfr(models, make_row))
 }

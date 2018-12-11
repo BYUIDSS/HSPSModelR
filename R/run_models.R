@@ -9,6 +9,8 @@
 #' @param trim_models Logical. If TRUE, excess will be omited from models
 #' @param seed Integer. Seed for caretEnsemble::caretList()
 #' @param num_folds Integer. Number of folds.
+#' @param light `logical.` FALSE data will train on only 5 algorithms. if TRUE
+#' (default), data will train on all 68 models
 #' @importFrom caretEnsemble caretList
 #' @importFrom caret trainControl createFolds
 #' @importFrom purrr map
@@ -20,16 +22,18 @@
 #' @seealso \link[caretEnsemble]{caretList}
 run_models <- function(train_x, train_y, seed = 1, num_folds = 2,
                        trim_models = TRUE, light = FALSE) {
+
   folds_index <- caret::createFolds(train_y, k = num_folds)
+
   myControl <- caret::trainControl(
-    method = "cv",
-    number = 2,
-    trim          = trim_models,
-    classProbs    = TRUE,
-    verboseIter   = TRUE,
-    allowParallel = TRUE,
+    method          = "cv",
+    number          = 2,
+    trim            = trim_models,
+    classProbs      = TRUE,
+    verboseIter     = TRUE,
+    allowParallel   = TRUE,
     savePredictions = "final",
-    index = folds_index,
+    index           = folds_index,
     summaryFunction = twoClassSummary)
 
   if (light == TRUE) {
@@ -112,6 +116,7 @@ run_models <- function(train_x, train_y, seed = 1, num_folds = 2,
   }
 
   set.seed(seed)
+
   model_list <- caretEnsemble::caretList(
     x                = train_x,
     y                = train_y,

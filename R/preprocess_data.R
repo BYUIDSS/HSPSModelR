@@ -33,7 +33,6 @@
 #'
 #' @author "Dallin Webb <dallinwebb@@byui.edu>"
 #' @seealso \link[caret]{preProcess}
-
 preprocess_data <- function(x,
                             target      = "Truth",
                             reduce_cols = FALSE,
