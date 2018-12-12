@@ -2,7 +2,7 @@
 #'
 #' Generates tibble of measures
 #'
-#' This is the details section
+#' This is a function that gives a list of measures of how well certain models did. (Deprecated)
 #'
 #' @param models List of models of class \code{train}
 #' @param test_x `data.frame` or `tibble`. explanitory variables
