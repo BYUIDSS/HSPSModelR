@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_common_predictions.R
 \name{get_common_predictions}
 \alias{get_common_predictions}
-\title{Find at risk customers}
+\title{Find at risk ID's}
 \usage{
 get_common_predictions(models, test_x, threshold, id_col = NULL)
 }
@@ -11,15 +11,32 @@ get_common_predictions(models, test_x, threshold, id_col = NULL)
 
 \item{test_x}{`data.frame` or `tibble`. explanitory variables from the test set}
 
-\item{threshold}{a value between 0 and 1. What ratio of columns do you need to agree your target factor?}
+\item{threshold}{a numeric value between 0 and 1. What ratio of columns do you
+need to agree your target factor?}
 
-\item{id_col}{identify your ID column. If there are no IDs, row numbers will be assigned before filtering out uncertain rows.}
+\item{id_col}{string of ID column. If there are no IDs, row numbers will be
+assigned before filtering out uncertain rows.}
 }
 \value{
-This function returns a \code{tibble}, a single column reporting the ratio of like predictions for dropped clients meeting the prediction threshold
+This function returns a \code{tibble}, a single column reporting the
+  ratio of like predictions for dropped clients meeting the prediction threshold
 }
 \description{
-Makes predictions using a list of models and returns a vector where each value represents the ratio of models which agree on a specified classification for that observation.
+Makes predictions using a list of models and returns a vector where each value
+  represents the ratio of models which agree on a specified classification for
+  that observation.
+}
+\details{
+Details goes here
+}
+\examples{
+\dontrun{
+
+get_common_predictions(models    = models_list,
+                       test_x    = test_x,
+                       threshold = 0.70)
+
+}
 }
 \author{
 "Chad Schaeffer <sch12059@byui.edu>",

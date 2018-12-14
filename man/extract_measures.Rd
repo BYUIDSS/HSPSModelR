@@ -20,7 +20,7 @@ This function returns a \code{tibble} of measures by model
 Generates tibble of measures
 }
 \details{
-This is the details section
+This is a function that gives a list of measures of how well certain models did. (Deprecated)
 }
 \seealso{
 \link[caret]{confusionMatrix}

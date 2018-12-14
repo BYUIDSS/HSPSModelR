@@ -9,6 +9,12 @@ install_train_packages()
 \description{
 Install and / or load all libraries used in the BYUImachine::run_models function
 }
+\examples{
+
+\dontrun{
+install_train_packages()
+}
+}
 \author{
 "Chad Schaeffer <sch12059@byui.edu>"
 }

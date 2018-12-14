@@ -24,6 +24,15 @@
 #'
 #' @author "Dallin Webb <dallinwebb@@byui.edu>"
 #' @seealso \link[caret]{varImp}
+#'
+#' @examples
+#' \dontrun{
+#'
+#' vars <- var_imp_overall(models_list)
+#'
+#' gg_var_imp(vars, top_num = 20)
+#'
+#' }
 gg_var_imp <- function(data, top_num = 20) {
 
   if (!sum(c("features","rank_scaled") %in% names(data)) == 2) {

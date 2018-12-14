@@ -1,11 +1,17 @@
-#' Find at risk customers
+#' Find at risk ID's
 #'
-#' Makes predictions using a list of models and returns a vector where each value represents the ratio of models which agree on a specified classification for that observation.
+#' Makes predictions using a list of models and returns a vector where each value
+#'   represents the ratio of models which agree on a specified classification for
+#'   that observation.
+#'
+#'  Details goes here
 #'
 #' @param models A list of models of class `train`
 #' @param test_x `data.frame` or `tibble`. explanitory variables from the test set
-#' @param threshold a value between 0 and 1. What ratio of columns do you need to agree your target factor?
-#' @param id_col identify your ID column. If there are no IDs, row numbers will be assigned before filtering out uncertain rows.
+#' @param threshold a numeric value between 0 and 1. What ratio of columns do you
+#'   need to agree your target factor?
+#' @param id_col string of ID column. If there are no IDs, row numbers will be
+#'   assigned before filtering out uncertain rows.
 #'
 #' @importFrom stringr str_replace_all str_detect
 #' @importFrom stats predict
@@ -15,9 +21,19 @@
 #' @importFrom tibble is_tibble as_tibble
 #' @export
 #'
-#' @return This function returns a \code{tibble}, a single column reporting the ratio of like predictions for dropped clients meeting the prediction threshold
+#' @return This function returns a \code{tibble}, a single column reporting the
+#'   ratio of like predictions for dropped clients meeting the prediction threshold
 #'
 #' @author "Chad Schaeffer <sch12059@@byui.edu>",
+#'
+#' @examples
+#' \dontrun{
+#'
+#' get_common_predictions(models    = models_list,
+#'                        test_x    = test_x,
+#'                        threshold = 0.70)
+#'
+#' }
 get_common_predictions <- function(models,
                                    test_x,
                                    threshold,

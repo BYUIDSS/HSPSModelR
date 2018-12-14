@@ -2,18 +2,34 @@
 #'
 #' Generates a tibble with features optimized for machine learning
 #'
-#' This function will .... reguardless of inputs
+#' Data is often messy and needs to be cleaned prior to use in machine learning.
+#'   \code{preprocess_data} can help with this but isn't a complete solution.
+#'   Reguardless of argument specification, this function will ungroup data if
+#'   grouped, and turn \code{Inf} values into NA. Beyond that, the user can
+#'   specify whether to convert their target variable into a factor (default),
+#'   or convert to 0 and 1 with \code{factor_y = FALSE}; whether to impute NA's
+#'   using mean, knn, or replace with 0 (default) using \code{impute}; and whether
+#'   to reduce columns with \code{reduce_cols}. When \code{reduce} is set to
+#'   \code{TRUE}, \code{freq_cut} and \code{unique_cut} can also bet set to
+#'   exclude more or less columns. See the argument definitions in
+#'   \link[caret]{nearZeroVar} for further information.
 #'
 #' @param x data frame or tibble.
 #' @param target classifier column
-#' @param reduce_cols lgl `TRUE`: Columns are reduced based on near zero variance and correlation; FALSE = Nothing
-#' @param factor_y `FALSE`: Recodes pred to 0 and 1; TRUE = Recodes pred to factor
+#' @param reduce_cols lgl `TRUE`: Columns are reduced based on near zero
+#'   variance and correlation; FALSE = Nothing
+#' @param factor_y `FALSE`: Recodes pred to 0 and 1; `TRUE` = Recodes pred to
+#'   factor
 #' @param impute character Impute NA by "knn","mean","zero"
-#' @param corr_cutoff Corelation coefficient level to cut off highly correlated columns, devaulted to .90
-#' @param freq_cut the cutoff for the ratio of the most common value to the second most common value
-#' @param unique_cut the cutoff for the percentage of distinct values out of the number of total samples
-#' (knn takes substantially longer to compute, zero replaces NA with 0)
-#' @param k the number of nearest neighbours to use for imputate (defaults to 10)
+#' @param corr_cutoff Corelation coefficient level to cut off highly correlated
+#'   columns, devaulted to .90
+#' @param freq_cut the cutoff for the ratio of the most common value to the
+#'   second most common value
+#' @param unique_cut the cutoff for the percentage of distinct values out of the
+#'   number of total samples (knn takes substantially longer to compute, zero
+#'  replaces NA with 0)
+#' @param k the number of nearest neighbours to use for impute (defaults to 10)
+#' @param prepro_methods string or vector of strings of preprocessing methods
 #' @importFrom DMwR knnImputation
 #' @importFrom caret findCorrelation nearZeroVar
 #' @importFrom naniar impute_mean_if all_complete any_na
@@ -32,7 +48,27 @@
 #' @return This function returns a \code{tibble} of optimized features
 #'
 #' @author "Dallin Webb <dallinwebb@@byui.edu>"
-#' @seealso \link[caret]{preProcess}
+#' @seealso \link[caret]{preProcess}, \link[caret]{nearZeroVar},
+#'   \link[caret]{findCorrelation}, \link[stats]{cor}
+#'
+#' @examples
+#'
+#' \dontrun{
+#' \donttest{
+#' library(caret)
+#' data(dhfr)
+#'
+#' dhfr_reduced <- preprocess_data(dhfr, target = "Y", reduce_cols = TRUE)
+#'
+#' dhfr_reduced <- preprocess_data(dhfr,
+#'                                 target      = "Y",
+#'                                 reduce_cols = TRUE,
+#'                                 impute      = "mean",
+#'                                 freq_cut    = 2,
+#'                                 unique_cut  = 20,
+#'                                 prepro_methods = c("center","scale","BoxCox"))
+#' }
+#' }
 preprocess_data <- function(x,
                             target      = "Truth",
                             reduce_cols = FALSE,
@@ -41,10 +77,11 @@ preprocess_data <- function(x,
                             corr_cutoff = .90,
                             freq_cut    = 95/5,
                             unique_cut  = 10,
-                            k           = 10) {
-  # if (!is.data.frame(x) | !is_tibble(x)) {
-  #   message("x needs to be a data.frame or tibble")
-  # }
+                            k           = 10,
+                            prepro_methods  = NULL) {
+  if (sum(!is.data.frame(x), !is_tibble(x)) == 0) {
+    message("x needs to be a data.frame or tibble")
+  }
 
   if (sum(class(x) == "grouped_df") > 0) {
     x <- x %>% ungroup()
@@ -95,17 +132,20 @@ preprocess_data <- function(x,
       knnImputation(k = k) %>%
       as_tibble() %>%
       bind_cols(x %>% select_if(all_complete))
+
   } else if (impute == "mean") {
     message("Imputing NAs by column means")
     x <- x %>%
       select(-target) %>%
       impute_mean_if(any_na)
+
   } else if (impute == "zero") {
     message("Replacing NAs with 0")
     x <- x %>%
       select(-target) %>%
       replace(is.na(.), 0)
   }
+
   x <- x %>% bind_cols(target_column)
 
   if (target_column %>% is.factor() == TRUE) {
@@ -125,6 +165,7 @@ preprocess_data <- function(x,
       unique(.) %>%
       unlist() %>%
       unname()
+
     class_1 <- class[1]
     class_2 <- class[2]
 
@@ -151,6 +192,7 @@ preprocess_data <- function(x,
       filter(rowname != "Truth") %>%
       {.$rowname}
     num_nzv_columns <- length(nzv)
+
     x <- x %>% select(-nzv)
 
     message("  Done! Removed ", num_nzv_columns, " columns with variance near zero")
@@ -166,6 +208,12 @@ preprocess_data <- function(x,
 
 
     message("DONE!")
+  }
+
+  if (!is.null(prepro_methods)) {
+    pp_ob <- caret::preProcess(x, methods = prepro_methods)
+    x <- pp_ob %>% predict(newdata = x)
+
   }
 
   if (has_id == TRUE) {

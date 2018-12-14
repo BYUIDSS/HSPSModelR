@@ -4,7 +4,7 @@
 \alias{get_performance}
 \title{Extract model performance}
 \usage{
-get_performance(models, test_x, test_y)
+get_performance(models, test_x, test_y, format = "long")
 }
 \arguments{
 \item{models}{List of models of class \code{train}}
@@ -12,6 +12,8 @@ get_performance(models, test_x, test_y)
 \item{test_x}{`data.frame` or `tibble` of explanitory variables}
 
 \item{test_y}{vector of target variable}
+
+\item{format}{"long" for long format (default), or "wide" for wide format}
 }
 \value{
 This function returns a \code{tibble} of model performance including columns:
@@ -26,6 +28,17 @@ Generates tibble of performance measures by model, measure and arranged by score
 }
 \details{
 This is the details section
+}
+\examples{
+\dontrun{
+# Long format
+p <- get_performance(models_list, test_x, test_y)
+p
+p \%>\% filter(measure == "F1")
+
+# Wide format
+get_performance(models_list, test_x, test_y, format = "wide")
+}
 }
 \seealso{
 \link[BYUImachine]{extract_measures}

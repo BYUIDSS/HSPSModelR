@@ -26,6 +26,14 @@ between model agreeableness
 To be used like \code{BYUImachine::var_imp_raw()} but goes a step further
 and estimates importance for each distinct feature
 }
+\examples{
+
+\dontrun{
+
+var_imp_overall(models_list)
+
+}
+}
 \seealso{
 \link[caret]{varImp}
 }

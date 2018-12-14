@@ -41,6 +41,12 @@ This function returns a \code{data.frame} including columns:
 \description{
 Takes a list of trained machine learning models and returns diagnostics as a data frame as to compare the effectiveness of algorithms. Measures include Accuracy, Prevalence, Detection Rate, F1, Cohen's Kappa, McNemar P-Value, Negative and Positive Predictive value, Precision, Recall, Sensitivity, and Specificity
 }
+\examples{
+
+\dontrun{
+make_table(models_list, test_x, test_y)
+}
+}
 \author{
 "Chad Schaeffer <sch12059@byui.edu>
 }

@@ -6,27 +6,34 @@
 \usage{
 preprocess_data(x, target = "Truth", reduce_cols = FALSE,
   factor_y = TRUE, impute = "zero", corr_cutoff = 0.9,
-  freq_cut = 95/5, unique_cut = 10, k = 10)
+  freq_cut = 95/5, unique_cut = 10, k = 10, prepro_methods = NULL)
 }
 \arguments{
 \item{x}{data frame or tibble.}
 
 \item{target}{classifier column}
 
-\item{reduce_cols}{lgl `TRUE`: Columns are reduced based on near zero variance and correlation; FALSE = Nothing}
+\item{reduce_cols}{lgl `TRUE`: Columns are reduced based on near zero
+variance and correlation; FALSE = Nothing}
 
-\item{factor_y}{`FALSE`: Recodes pred to 0 and 1; TRUE = Recodes pred to factor}
+\item{factor_y}{`FALSE`: Recodes pred to 0 and 1; `TRUE` = Recodes pred to
+factor}
 
 \item{impute}{character Impute NA by "knn","mean","zero"}
 
-\item{corr_cutoff}{Corelation coefficient level to cut off highly correlated columns, devaulted to .90}
+\item{corr_cutoff}{Corelation coefficient level to cut off highly correlated
+columns, devaulted to .90}
 
-\item{freq_cut}{the cutoff for the ratio of the most common value to the second most common value}
+\item{freq_cut}{the cutoff for the ratio of the most common value to the
+second most common value}
 
-\item{unique_cut}{the cutoff for the percentage of distinct values out of the number of total samples
-(knn takes substantially longer to compute, zero replaces NA with 0)}
+\item{unique_cut}{the cutoff for the percentage of distinct values out of the
+ number of total samples (knn takes substantially longer to compute, zero
+replaces NA with 0)}
 
-\item{k}{the number of nearest neighbours to use for imputate (defaults to 10)}
+\item{k}{the number of nearest neighbours to use for impute (defaults to 10)}
+
+\item{prepro_methods}{string or vector of strings of preprocessing methods}
 }
 \value{
 This function returns a \code{tibble} of optimized features
@@ -35,10 +42,40 @@ This function returns a \code{tibble} of optimized features
 Generates a tibble with features optimized for machine learning
 }
 \details{
-This function will .... reguardless of inputs
+Data is often messy and needs to be cleaned prior to use in machine learning.
+  \code{preprocess_data} can help with this but isn't a complete solution.
+  Reguardless of argument specification, this function will ungroup data if
+  grouped, and turn \code{Inf} values into NA. Beyond that, the user can
+  specify whether to convert their target variable into a factor (default),
+  or convert to 0 and 1 with \code{factor_y = FALSE}; whether to impute NA's
+  using mean, knn, or replace with 0 (default) using \code{impute}; and whether
+  to reduce columns with \code{reduce_cols}. When \code{reduce} is set to
+  \code{TRUE}, \code{freq_cut} and \code{unique_cut} can also bet set to
+  exclude more or less columns. See the argument definitions in
+  \link[caret]{nearZeroVar} for further information.
+}
+\examples{
+
+\dontrun{
+\donttest{
+library(caret)
+data(dhfr)
+
+dhfr_reduced <- preprocess_data(dhfr, target = "Y", reduce_cols = TRUE)
+
+dhfr_reduced <- preprocess_data(dhfr,
+                                target      = "Y",
+                                reduce_cols = TRUE,
+                                impute      = "mean",
+                                freq_cut    = 2,
+                                unique_cut  = 20,
+                                prepro_methods = c("center","scale","BoxCox"))
+}
+}
 }
 \seealso{
-\link[caret]{preProcess}
+\link[caret]{preProcess}, \link[caret]{nearZeroVar},
+  \link[caret]{findCorrelation}, \link[stats]{cor}
 }
 \author{
 "Dallin Webb <dallinwebb@byui.edu>"

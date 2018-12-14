@@ -28,6 +28,14 @@
 #'
 #' @author "Dallin Webb <dallinwebb@@byui.edu>"
 #' @seealso \link[caret]{varImp}
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' var_imp_overall(models_list)
+#'
+#' }
 var_imp_overall <- function(models) {
 
   if (!(class(models) %in% c("list","caretList")) | class(models[[1]]) != "train") {
@@ -51,7 +59,6 @@ var_imp_overall <- function(models) {
 
   suppressMessages(
     for (i in seq_along(imp_vars)) {
-
       if (ncol(imp_vars[[i]]$importance) > 1) {
         cleaned <- imp_vars[[i]]$importance %>%
           rownames_to_column() %>%
@@ -62,7 +69,6 @@ var_imp_overall <- function(models) {
           column_to_rownames()
         imp_vars[[i]]$importance <- cleaned
       }
-
     }
   )
 

@@ -11,6 +11,8 @@
 #' @param num_folds Integer. Number of folds.
 #' @param light `logical.` FALSE data will train on only 5 algorithms. if TRUE
 #' (default), data will train on all 68 models
+#' @param preproc_methods prepro_methods string or vector of strings of
+#'   preprocessing methods. See also \link[caret]{preProcess}
 #' @importFrom caretEnsemble caretList
 #' @importFrom caret trainControl createFolds
 #' @importFrom purrr map
@@ -20,8 +22,26 @@
 #'
 #' @author "Dallin Webb <dallinwebb@@byui.edu>"
 #' @seealso \link[caretEnsemble]{caretList}
-run_models <- function(train_x, train_y, seed = 1, num_folds = 2,
-                       trim_models = TRUE, light = FALSE) {
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' models_list <- run_models(train_x     = train_x,
+#'                           train_y     = train_y,
+#'                           seed        = 1,
+#'                           num_folds   = 2,
+#'                           trim_models = TRUE,
+#'                           light       = TRUE)
+#'
+#'
+#' }
+run_models <- function(train_x, train_y,
+                       seed            = 1,
+                       num_folds       = 2,
+                       trim_models     = TRUE,
+                       light           = FALSE,
+                       preproc_methods = NULL) {
 
   folds_index <- caret::createFolds(train_y, k = num_folds)
 
@@ -98,7 +118,6 @@ run_models <- function(train_x, train_y, seed = 1, num_folds = 2,
         "svmRadialCost",
         "gamSpline",
         "null",
-        "lda",
         "lvq",
         "bagEarth",
         "rpart1SE",
@@ -122,7 +141,8 @@ run_models <- function(train_x, train_y, seed = 1, num_folds = 2,
     y                = train_y,
     trControl        = myControl,
     methodList       = methods,
-    continue_on_fail = T
+    continue_on_fail = T,
+    preProcess = preproc_methods
   )
 
   if (trim_models == TRUE) {

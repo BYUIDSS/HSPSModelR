@@ -8,7 +8,7 @@
 #'
 #' @importFrom caret confusionMatrix
 #' @importFrom dplyr select filter mutate rename_at bind_rows
-#' @importFrom tibble rownames_to_column
+#' @importFrom tibble rownames_to_column as_tibble
 #' @importFrom stats predict
 #' @importFrom tidyr spread
 #' @importFrom magrittr %>%
@@ -40,6 +40,12 @@
 #' }
 #'
 #' @author "Chad Schaeffer <sch12059@@byui.edu>
+#'
+#' @examples
+#'
+#' \dontrun{
+#' make_table(models_list, test_x, test_y)
+#' }
 make_table <- function(models, test_x, test_y) {
 
   if (!is.list(models)) {
@@ -65,5 +71,5 @@ make_table <- function(models, test_x, test_y) {
         spread(measure, name)
     }
 
-    return(map_dfr(models, make_row))
+    return(map_dfr(models, make_row) %>% as_tibble())
 }

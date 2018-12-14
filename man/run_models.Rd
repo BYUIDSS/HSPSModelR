@@ -5,7 +5,7 @@
 \title{Run many models on train data}
 \usage{
 run_models(train_x, train_y, seed = 1, num_folds = 2,
-  trim_models = TRUE, light = FALSE)
+  trim_models = TRUE, light = FALSE, preproc_methods = NULL)
 }
 \arguments{
 \item{train_x}{data.frame or tibble of predictor variables}
@@ -20,6 +20,9 @@ run_models(train_x, train_y, seed = 1, num_folds = 2,
 
 \item{light}{`logical.` FALSE data will train on only 5 algorithms. if TRUE
 (default), data will train on all 68 models}
+
+\item{preproc_methods}{prepro_methods string or vector of strings of
+preprocessing methods. See also \link[caret]{preProcess}}
 }
 \value{
 This function returns a \code{list} of trained models:
@@ -29,6 +32,20 @@ Generates list of models of class train
 }
 \details{
 This is the details section
+}
+\examples{
+
+\dontrun{
+
+models_list <- run_models(train_x     = train_x,
+                          train_y     = train_y,
+                          seed        = 1,
+                          num_folds   = 2,
+                          trim_models = TRUE,
+                          light       = TRUE)
+
+
+}
 }
 \seealso{
 \link[caretEnsemble]{caretList}

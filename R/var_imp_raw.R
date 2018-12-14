@@ -24,6 +24,14 @@
 #'
 #' @author "Dallin Webb <dallinwebb@@byui.edu>"
 #' @seealso \link[caret]{varImp}
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' var_imp_raw(models_list)
+#'
+#' }
 var_imp_raw <- function(models) {
 
   if (!(class(models) %in% c("list","caretList")) | class(models[[1]]) != "train") {

@@ -24,6 +24,14 @@ Generates tibble of features ranked by importance by each model
 \details{
 This is the details section
 }
+\examples{
+
+\dontrun{
+
+var_imp_raw(models_list)
+
+}
+}
 \seealso{
 \link[caret]{varImp}
 }

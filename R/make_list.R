@@ -12,6 +12,12 @@
 #'
 #' @author "Chad Schaeffer <sch12059@@byui.edu>, Brad Borget <bor13001@@byui.edu>"
 #' @export
+#'
+#' @examples
+#'
+#' \dontrun{
+#' models <- make_list("path/to/file")
+#' }
 
 make_list <- function(x) {
   file.names <- dir(x, pattern = ".rds")

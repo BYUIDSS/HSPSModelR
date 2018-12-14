@@ -26,6 +26,15 @@ Generates ggplot of top ranked features
 \details{
 To be used after data is generated from \code{BYUImachine::var_imp_overall()}
 }
+\examples{
+\dontrun{
+
+vars <- var_imp_overall(models_list)
+
+gg_var_imp(vars, top_num = 20)
+
+}
+}
 \seealso{
 \link[caret]{varImp}
 }
