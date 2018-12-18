@@ -18,8 +18,7 @@ need to agree your target factor?}
 assigned before filtering out uncertain rows.}
 }
 \value{
-This function returns a \code{tibble}, a single column reporting the
-  ratio of like predictions for dropped clients meeting the prediction threshold
+\code{tibble}
 }
 \description{
 Makes predictions using a list of models and returns a vector where each value
@@ -27,7 +26,7 @@ Makes predictions using a list of models and returns a vector where each value
   that observation.
 }
 \details{
-Details goes here
+When ID's arent present in the data, example ID's are generated.
 }
 \examples{
 \dontrun{

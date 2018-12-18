@@ -16,8 +16,8 @@ gg_var_imp(data, top_num = 20)
 \itemize{
  \item model
  \item feature
- \item Overall scaled score produced by \code{caret::varImp()}
- \item rank ordered rank within each model
+ \item Overall - Scaled score produced by \code{caret::varImp()}
+ \item rank - Ordered rank within each model
 }
 }
 \description{

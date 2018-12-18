@@ -30,9 +30,6 @@ This function returns a \code{list} of trained models:
 \description{
 Generates list of models of class train
 }
-\details{
-This is the details section
-}
 \examples{
 
 \dontrun{

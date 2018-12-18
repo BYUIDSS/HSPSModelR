@@ -2,8 +2,6 @@
 #'
 #' Generates tibble of features ranked by importance by each model
 #'
-#' This is the details section
-#'
 #' @param models List of models of class \code{train}
 #' @importFrom dplyr select filter mutate arrange top_n row_number rename count group_by percent_rank
 #' @importFrom purrr map possibly

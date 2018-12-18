@@ -4,7 +4,7 @@
 #'   represents the ratio of models which agree on a specified classification for
 #'   that observation.
 #'
-#'  Details goes here
+#' When ID's arent present in the data, example ID's are generated.
 #'
 #' @param models A list of models of class `train`
 #' @param test_x `data.frame` or `tibble`. explanitory variables from the test set
@@ -21,8 +21,7 @@
 #' @importFrom tibble is_tibble as_tibble
 #' @export
 #'
-#' @return This function returns a \code{tibble}, a single column reporting the
-#'   ratio of like predictions for dropped clients meeting the prediction threshold
+#' @return \code{tibble}
 #'
 #' @author "Chad Schaeffer <sch12059@@byui.edu>",
 #'

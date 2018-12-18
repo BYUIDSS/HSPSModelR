@@ -2,8 +2,6 @@
 #'
 #' Generates list of models of class train
 #'
-#' This is the details section
-#'
 #' @param train_x data.frame or tibble of predictor variables
 #' @param train_y vector of target variable
 #' @param trim_models Logical. If TRUE, excess will be omited from models

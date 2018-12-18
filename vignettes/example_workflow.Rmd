@@ -81,7 +81,7 @@ Many preprocessing and training parameters can be specified such as preprocess, 
 install_train_packages()
 ```
 
-```{r warning=FALSE}
+```{r message=FALSE, warning=FALSE}
 models_list <- run_models(train_x     = train_x, 
                           train_y     = train_y, 
                           seed        = 1, 

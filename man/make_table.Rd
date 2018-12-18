@@ -17,7 +17,7 @@ make_table(models, test_x, test_y)
 This function returns a \code{data.frame} including columns:
 \itemize{
  \item Type
- \item Accuracy
+ \item Accuracy - Overall performance of model
  \item Accuracy Lower
  \item Accuracy Null
  \item Accuracy P value
@@ -25,21 +25,27 @@ This function returns a \code{data.frame} including columns:
  \item Balanced Accuracy
  \item Detection Prevalence
  \item Detection Rate
- \item F1
- \item Kappa
+ \item F1 - Hybrid metric usefull fr unbalanced classes
+ \item Kappa - Compares an observed accuracy with an expected accuracy
  \item McNemar P Value
  \item Negagive Prediction Value
  \item Positive Predictive Value
- \item Precision
+ \item Precision - How accurate the positive predictions are
  \item Prevalence
- \item Recall
- \item Sensitivity
- \item Specificty
- \item Method; the algorithm used to train each particular model
+ \item Recall - True positive rate, number of instances from the positive class
+   that actually predictoed correctly
+ \item Sensitivity - Same as recall
+ \item Specificty - Number of instances from the negative class that were
+   actually predicted correctly
+ \item Method the algorithm used to train each particular model
 }
 }
 \description{
-Takes a list of trained machine learning models and returns diagnostics as a data frame as to compare the effectiveness of algorithms. Measures include Accuracy, Prevalence, Detection Rate, F1, Cohen's Kappa, McNemar P-Value, Negative and Positive Predictive value, Precision, Recall, Sensitivity, and Specificity
+Takes a list of trained machine learning models and returns diagnostics as a
+  data frame as to compare the effectiveness of algorithms. Measures include
+  Accuracy, Prevalence, Detection Rate, F1, Cohen's Kappa, McNemar P-Value,
+  Negative and Positive Predictive value, Precision, Recall, Sensitivity, and
+  Specificity
 }
 \examples{
 

@@ -21,9 +21,6 @@ This function returns a \code{tibble} of ranked features by model including colu
 \description{
 Generates tibble of features ranked by importance by each model
 }
-\details{
-This is the details section
-}
 \examples{
 
 \dontrun{

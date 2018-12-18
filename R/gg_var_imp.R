@@ -18,8 +18,8 @@
 #' \itemize{
 #'  \item model
 #'  \item feature
-#'  \item Overall scaled score produced by \code{caret::varImp()}
-#'  \item rank ordered rank within each model
+#'  \item Overall - Scaled score produced by \code{caret::varImp()}
+#'  \item rank - Ordered rank within each model
 #' }
 #'
 #' @author "Dallin Webb <dallinwebb@@byui.edu>"
