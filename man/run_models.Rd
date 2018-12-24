@@ -5,7 +5,7 @@
 \title{Run many models on train data}
 \usage{
 run_models(train_x, train_y, seed = 1, num_folds = 2,
-  trim_models = TRUE, light = FALSE, preproc_methods = NULL)
+  trim_models = TRUE, light = FALSE, prepro_methods = NULL)
 }
 \arguments{
 \item{train_x}{data.frame or tibble of predictor variables}
@@ -21,7 +21,7 @@ run_models(train_x, train_y, seed = 1, num_folds = 2,
 \item{light}{`logical.` FALSE data will train on only 5 algorithms. if TRUE
 (default), data will train on all 68 models}
 
-\item{preproc_methods}{prepro_methods string or vector of strings of
+\item{prepro_methods}{prepro_methods string or vector of strings of
 preprocessing methods. See also \link[caret]{preProcess}}
 }
 \value{

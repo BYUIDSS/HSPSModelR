@@ -2,9 +2,9 @@
 #'
 #' Generates ggplot of top ranked features
 #'
-#' To be used after data is generated from \code{BYUImachine::var_imp_overall()}
+#' To be used after data is generated from \code{HSPSModelR::var_imp_overall()}
 #'
-#' @param data tibble of results from \code{BYUImachine::var_imp_overall()}
+#' @param data tibble of results from \code{HSPSModelR::var_imp_overall()}
 #' @param top_num \code{integer} number of top features to display
 #' @importFrom dplyr top_n mutate
 #' @importFrom forcats fct_reorder
@@ -37,7 +37,7 @@ gg_var_imp <- function(data, top_num = 20) {
 
   if (!sum(c("features","rank_scaled") %in% names(data)) == 2) {
     stop("Data must contain 'features' and 'rank_scaled' columns ",
-         "produced by the 'BYUImachine::var_imp_overall() function")
+         "produced by the 'HSPSModelR::var_imp_overall() function")
   }
 
 

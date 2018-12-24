@@ -1,17 +1,17 @@
 ---
-title: "BYUImachine Example Workflow"
+title: "HSPSModelR Example Workflow"
 author: "Brad Borget, Spencer Cook, Chad Schaeffer, Nic Stover, Dallin Webb"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Example workflow}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ## Overview
 
-**BYUImachine** is an R package that reduces the time it takes to fit and compare many machine learning models to a cognostic dataset. It is designed to give the user a quick snapshot of which classification algorithms perform well, as well as extract variable importance. This package works only for binary classification problems.
+**HSPSModelR** is an R package that reduces the time it takes to fit and compare many machine learning models to a cognostic dataset. It is designed to give the user a quick snapshot of which classification algorithms perform well, as well as extract variable importance. This package works only for binary classification problems.
 
 <br>
 
@@ -20,13 +20,13 @@ vignette: >
 ```{r eval = FALSE}
 install.packages(c("devtools", "caret", "tidyverse"))
 
-devtools::install_github("BYUIDSS/BYUImachine")
+devtools::install_github("HSPS-DataScience/HSPSModelR")
 ```
 
 ```{r message=FALSE, warning=FALSE}
 library(caret)
 library(tidyverse)
-library(BYUImachine)
+library(HSPSModelR)
 ```
 
 <br>
@@ -88,7 +88,7 @@ models_list <- run_models(train_x     = train_x,
                           num_folds   = 2, 
                           trim_models = TRUE, 
                           light       = TRUE,
-                          preproc_methods = c("center","scale","YeoJohnson"))
+                          prepro_methods = c("center","scale","YeoJohnson"))
 ```
 
 <br>
@@ -126,7 +126,7 @@ get_common_predictions(models    = models_list,
                        threshold = 0.70)
 ```
 
-The get_common_predictions function takes a list of models and outputs a vector of rows whose desired outcomes were agreed upon by a prespecified ratio of models. Downloading the BYUImachine package and using run_models() then get_common_predictions() is the fastest way to get from raw data to quality results.
+The get_common_predictions function takes a list of models and outputs a vector of rows whose desired outcomes were agreed upon by a prespecified ratio of models. Downloading the HSPSModelR package and using run_models() then get_common_predictions() is the fastest way to get from raw data to quality results.
 
 <br>
 

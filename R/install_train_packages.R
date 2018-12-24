@@ -1,6 +1,6 @@
 #' Get packages needed for ensemble learning
 #'
-#' Install and / or load all libraries used in the BYUImachine::run_models function
+#' Install and / or load all libraries used in the HSPSModelR::run_models function
 #'
 #' @importFrom pacman p_load
 #'

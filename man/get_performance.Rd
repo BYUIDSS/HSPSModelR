@@ -64,7 +64,7 @@ get_performance(models_list, test_x, test_y, format = "wide")
 }
 }
 \seealso{
-\link[BYUImachine]{extract_measures}
+\link[HSPSModelR]{extract_measures}
 }
 \author{
 "Dallin Webb <dallinwebb@byui.edu>"

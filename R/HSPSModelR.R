@@ -1,4 +1,4 @@
-#' BYUImachine: A package for producing a robust prediction model using machine
+#' HSPSModelR: A package for producing a robust prediction model using machine
 #' learning to predict attrition of eClaims customers.
 #'
 #' THis package was made for Henry Schein, but it's meant to make the caret functions simpler and easier, and to build out a list of machine learning models that can either be used in an ensemble, or just use the one with the best predictors.
@@ -27,5 +27,5 @@
 #' \code{run_models}
 #'
 #' @docType package
-#' @name BYUImachine
+#' @name HSPSModelR
 NULL

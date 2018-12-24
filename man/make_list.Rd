@@ -14,7 +14,7 @@ This function returns a \code{list} of contents at specified location
 }
 \description{
 Compiles the contents of a folder into a list. Intended for machine learning
-  models, and for use with the BYUImachine::make_table function
+  models, and for use with the HSPSModelR::make_table function
 }
 \examples{
 

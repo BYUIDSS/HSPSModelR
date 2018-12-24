@@ -9,8 +9,9 @@
 #' @param num_folds Integer. Number of folds.
 #' @param light `logical.` FALSE data will train on only 5 algorithms. if TRUE
 #' (default), data will train on all 68 models
-#' @param preproc_methods prepro_methods string or vector of strings of
+#' @param prepro_methods prepro_methods string or vector of strings of
 #'   preprocessing methods. See also \link[caret]{preProcess}
+#'
 #' @importFrom caretEnsemble caretList
 #' @importFrom caret trainControl createFolds
 #' @importFrom purrr map
@@ -39,7 +40,7 @@ run_models <- function(train_x, train_y,
                        num_folds       = 2,
                        trim_models     = TRUE,
                        light           = FALSE,
-                       preproc_methods = NULL) {
+                       prepro_methods  = NULL) {
 
   folds_index <- caret::createFolds(train_y, k = num_folds)
 
@@ -140,7 +141,7 @@ run_models <- function(train_x, train_y,
     trControl        = myControl,
     methodList       = methods,
     continue_on_fail = T,
-    preProcess = preproc_methods
+    preProcess       = prepro_methods
   )
 
   if (trim_models == TRUE) {

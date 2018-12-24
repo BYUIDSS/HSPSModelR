@@ -7,7 +7,7 @@
 gg_var_imp(data, top_num = 20)
 }
 \arguments{
-\item{data}{tibble of results from \code{BYUImachine::var_imp_overall()}}
+\item{data}{tibble of results from \code{HSPSModelR::var_imp_overall()}}
 
 \item{top_num}{\code{integer} number of top features to display}
 }
@@ -24,7 +24,7 @@ gg_var_imp(data, top_num = 20)
 Generates ggplot of top ranked features
 }
 \details{
-To be used after data is generated from \code{BYUImachine::var_imp_overall()}
+To be used after data is generated from \code{HSPSModelR::var_imp_overall()}
 }
 \examples{
 \dontrun{

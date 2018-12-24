@@ -1,7 +1,7 @@
 #' Make a list of models
 #'
 #' Compiles the contents of a folder into a list. Intended for machine learning
-#'   models, and for use with the BYUImachine::make_table function
+#'   models, and for use with the HSPSModelR::make_table function
 #'
 #' @param x source or file path
 #' @importFrom stringr str_c

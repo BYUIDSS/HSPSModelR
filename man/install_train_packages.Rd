@@ -7,7 +7,7 @@
 install_train_packages()
 }
 \description{
-Install and / or load all libraries used in the BYUImachine::run_models function
+Install and / or load all libraries used in the HSPSModelR::run_models function
 }
 \examples{
 

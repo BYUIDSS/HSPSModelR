@@ -3,7 +3,7 @@
 #' Generates tibble of ranked features based on within model importance and
 #' between model agreeableness
 #'
-#' To be used like \code{BYUImachine::var_imp_raw()} but goes a step further
+#' To be used like \code{HSPSModelR::var_imp_raw()} but goes a step further
 #' and estimates importance for each distinct feature
 #'
 #' @param models List of models of class \code{train}

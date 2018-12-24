@@ -52,7 +52,7 @@
 
 #'
 #' @author "Dallin Webb <dallinwebb@@byui.edu>"
-#' @seealso \link[BYUImachine]{extract_measures}
+#' @seealso \link[HSPSModelR]{extract_measures}
 #'
 #' @examples
 #' \dontrun{
